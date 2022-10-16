@@ -1,6 +1,6 @@
 import type {NextPage} from 'next';
 import Head from 'next/head';
-import CompanyCard from '../components/CompanyCard';
+import CompanyCard from '../../components/CompanyCard';
 import {
   cowrywise,
   dojah,
@@ -8,7 +8,7 @@ import {
   nike,
   paystack,
   wise,
-} from '../assets/images/images';
+} from '../../assets/images/images';
 
 const companies = [
   {
@@ -53,7 +53,7 @@ const companies = [
   },
 ];
 
-const Home: NextPage = () => {
+const Companies: NextPage = () => {
   return (
     <>
       <Head>
@@ -62,15 +62,8 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <section className="py-20 mx-auto text-center max-w-[922px]">
-        <h1 className="text-grey text-2xl font-bold">
-          Find your favorite sites in one place, then learn from the greats.
-        </h1>
-        <p className="mt-6 mb-2 text-md text-body font-medium">
-          We track each of these sites and update our collection regularly to
-          include the latest designs.
-        </p>
-        <p className="text-md text-blue font-medium">*No account needed</p>
+      <section className="py-16">
+        <h1 className="text-grey text-xl font-medium">All companies</h1>
       </section>
 
       <section>
@@ -80,4 +73,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default Companies;

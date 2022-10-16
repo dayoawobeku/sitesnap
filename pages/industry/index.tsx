@@ -1,6 +1,6 @@
 import type {NextPage} from 'next';
 import Head from 'next/head';
-import CompanyCard from '../components/CompanyCard';
+import CompanyCard from '../../components/CompanyCard';
 import {
   cowrywise,
   dojah,
@@ -8,7 +8,7 @@ import {
   nike,
   paystack,
   wise,
-} from '../assets/images/images';
+} from '../../assets/images/images';
 
 const companies = [
   {
@@ -53,7 +53,7 @@ const companies = [
   },
 ];
 
-const Home: NextPage = () => {
+const Industry: NextPage = () => {
   return (
     <>
       <Head>
@@ -80,4 +80,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default Industry;
