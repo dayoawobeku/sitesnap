@@ -1,37 +1,33 @@
 import type {NextPage} from 'next';
 import Head from 'next/head';
-import {plainCard} from '../../assets/images/images';
 import PagesCard from '../../components/PagesCard';
+import {useWebpages} from '../../hooks';
 
-const pages = [
-  {
-    page_name: 'Landing page',
-    page_image: plainCard,
-    id: 1,
-  },
-  {
-    page_name: 'About us',
-    page_image: plainCard,
-    id: 2,
-  },
-  {
-    page_name: 'Contact us',
-    page_image: plainCard,
-    id: 3,
-  },
-  {
-    page_name: 'Pricing',
-    page_image: plainCard,
-    id: 4,
-  },
-  {
-    page_name: '404',
-    page_image: plainCard,
-    id: 5,
-  },
-];
+interface Pages {
+  page_name: string;
+  attributes: {
+    pages: string[];
+  };
+}
 
 const Webpages: NextPage = () => {
+  const {data: webpages} = useWebpages();
+
+  const pagesArray = webpages?.data?.map(
+    (page: Pages) => page.attributes.pages,
+  );
+  const flattenedPages = pagesArray?.flat();
+
+  // get the unique pages
+  const uniquePages = flattenedPages?.filter((page: Pages, index: number) => {
+    return (
+      flattenedPages?.findIndex(
+        (p: Pages) => p.page_name === page.page_name,
+      ) === index
+    );
+  });
+
+  console.log(uniquePages);
   return (
     <>
       <Head>
@@ -41,11 +37,11 @@ const Webpages: NextPage = () => {
       </Head>
 
       <section className="py-16">
-        <h1 className="text-grey text-xl font-medium">All pages</h1>
+        <h1 className="text-xl font-medium text-grey">Webpages</h1>
       </section>
 
       <section>
-        <PagesCard pages={pages} />
+        <PagesCard pages={uniquePages} />
       </section>
     </>
   );

@@ -1,6 +1,7 @@
 // SVGs
 export {default as search} from './search.svg';
 export {default as coffee} from './coffee.svg';
+export {default as hyperlink} from './hyperlink.svg';
 
 // PNGs
 export {default as wise} from './wise.png';

@@ -6,6 +6,14 @@ module.exports = {
     './assets/**/*.{html,js,jsx,tsx}',
   ],
   theme: {
+    extend: {
+      spacing: {
+        13: '3.25rem',
+      },
+      transitionProperty: {
+        outlineOffset: 'outline-offset',
+      },
+    },
     colors: {
       body: '#53504B',
       grey: '#1D1C1A',

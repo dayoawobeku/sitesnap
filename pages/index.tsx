@@ -1,59 +1,11 @@
 import type {NextPage} from 'next';
 import Head from 'next/head';
 import CompanyCard from '../components/CompanyCard';
-import {
-  cowrywise,
-  dojah,
-  flutterwave,
-  nike,
-  paystack,
-  wise,
-} from '../assets/images/images';
+import {useCompanies} from '../hooks';
 
-const companies = [
-  {
-    company_name: 'Wise',
-    company_image: wise,
-    description: 'The cheap, fast way to send money abroad.',
-    id: 1,
-  },
-  {
-    company_name: 'Nike',
-    company_image: nike,
-    description: 'Nike. Just Do it',
-    id: 2,
-  },
-  {
-    company_name: 'Paystack',
-    company_image: paystack,
-    description:
-      'Modern online and offline payments for Africa - Paystack helps businesses in Africa get paid by anyone, anywhere in the world',
-    id: 3,
-  },
-  {
-    company_name: 'Cowrywise',
-    company_image: cowrywise,
-    description:
-      'Put your money to work. Build discipline, access financial tools that steadily grow your finances.',
-    id: 4,
-  },
-  {
-    company_name: 'Dojah',
-    company_image: dojah,
-    description:
-      'Startups, scale-ups and all types of digital businesses use Dojah to verify, onboard and manage user identity across Africa.',
-    id: 5,
-  },
-  {
-    company_name: 'Flutterwave',
-    company_image: flutterwave,
-    description:
-      'Endless possibilities for every business - Sell online, process payments, build financial products, or use business tools designed to grow your business.',
-    id: 6,
-  },
-];
+const Pages: NextPage = () => {
+  const {data: companies} = useCompanies();
 
-const Home: NextPage = () => {
   return (
     <>
       <Head>
@@ -62,22 +14,22 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <section className="py-20 mx-auto text-center max-w-[922px]">
-        <h1 className="text-grey text-2xl font-bold">
+      <section className="mx-auto max-w-[922px] py-20 text-center">
+        <h1 className="text-2xl font-bold text-grey">
           Find your favorite sites in one place, then learn from the greats.
         </h1>
-        <p className="mt-6 mb-2 text-md text-body font-medium">
+        <p className="mt-6 mb-2 text-md font-medium text-body">
           We track each of these sites and update our collection regularly to
           include the latest designs.
         </p>
-        <p className="text-md text-blue font-medium">*No account needed</p>
+        <p className="text-md font-medium text-blue">*No account needed</p>
       </section>
 
       <section>
-        <CompanyCard companies={companies} />
+        <CompanyCard companies={companies?.data} />
       </section>
     </>
   );
 };
 
-export default Home;
+export default Pages;

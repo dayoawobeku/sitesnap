@@ -11,10 +11,26 @@ html {
 @layer components {
   input,
   textarea {
-    @apply font-medium placeholder:text-body;
+    @apply h-14 rounded-lg bg-white-200 px-4 font-medium text-grey outline outline-[2.5px] outline-white-200 placeholder:text-body focus-within:outline-blue focus-visible:outline-blue;
   }
 
   label {
     @apply font-medium;
+  }
+
+  button {
+    @apply hover:opacity-95 focus:outline-4 focus:outline-offset-[3px] focus:outline-blue focus:transition-outlineOffset focus:duration-200 focus:ease-in-out disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  nav a {
+    @apply outline-offset-2 focus:outline-blue focus-visible:outline-blue;
+  }
+
+  #search-btn {
+    @apply hover:bg-opacity-90;
+  }
+
+  .nav-ul li {
+    @apply hover:text-blue;
   }
 }

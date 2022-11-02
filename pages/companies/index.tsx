@@ -1,59 +1,11 @@
 import type {NextPage} from 'next';
 import Head from 'next/head';
 import CompanyCard from '../../components/CompanyCard';
-import {
-  cowrywise,
-  dojah,
-  flutterwave,
-  nike,
-  paystack,
-  wise,
-} from '../../assets/images/images';
-
-const companies = [
-  {
-    company_name: 'Wise',
-    company_image: wise,
-    description: 'The cheap, fast way to send money abroad.',
-    id: 1,
-  },
-  {
-    company_name: 'Nike',
-    company_image: nike,
-    description: 'Nike. Just Do it',
-    id: 2,
-  },
-  {
-    company_name: 'Paystack',
-    company_image: paystack,
-    description:
-      'Modern online and offline payments for Africa - Paystack helps businesses in Africa get paid by anyone, anywhere in the world',
-    id: 3,
-  },
-  {
-    company_name: 'Cowrywise',
-    company_image: cowrywise,
-    description:
-      'Put your money to work. Build discipline, access financial tools that steadily grow your finances.',
-    id: 4,
-  },
-  {
-    company_name: 'Dojah',
-    company_image: dojah,
-    description:
-      'Startups, scale-ups and all types of digital businesses use Dojah to verify, onboard and manage user identity across Africa.',
-    id: 5,
-  },
-  {
-    company_name: 'Flutterwave',
-    company_image: flutterwave,
-    description:
-      'Endless possibilities for every business - Sell online, process payments, build financial products, or use business tools designed to grow your business.',
-    id: 6,
-  },
-];
+import {useCompanies} from '../../hooks';
 
 const Companies: NextPage = () => {
+  const {data: companies} = useCompanies();
+
   return (
     <>
       <Head>
@@ -63,11 +15,11 @@ const Companies: NextPage = () => {
       </Head>
 
       <section className="py-16">
-        <h1 className="text-grey text-xl font-medium">All companies</h1>
+        <h1 className="text-xl font-medium text-grey">All companies</h1>
       </section>
 
       <section>
-        <CompanyCard companies={companies} />
+        <CompanyCard companies={companies?.data} />
       </section>
     </>
   );
