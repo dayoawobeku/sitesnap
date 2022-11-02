@@ -18,7 +18,7 @@ function Card({page_name, image_url}: PagesCardProps) {
       <div className="relative">
         {image_url ? (
           <Image
-            alt="wise"
+            alt=""
             src={image_url}
             width={620}
             height={411}
@@ -30,7 +30,7 @@ function Card({page_name, image_url}: PagesCardProps) {
           />
         ) : (
           <Image
-            alt="wise"
+            alt=""
             src={plainCard}
             width={620}
             height={411}

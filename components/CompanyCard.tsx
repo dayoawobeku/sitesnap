@@ -1,7 +1,7 @@
 import {Key} from 'react';
 import Image, {StaticImageData} from 'next/image';
-import {plainCard} from '../assets/images/images';
 import Link from 'next/link';
+import {plainCard} from '../assets/images/images';
 
 interface CompanyCardProps {
   id: Key | null | undefined;
@@ -33,7 +33,7 @@ function Card({attributes}: CompanyCardProps) {
         <div className="relative">
           {pages[0].image_url ? (
             <Image
-              alt="wise"
+              alt=""
               src={pages[0].image_url}
               width={620}
               height={411}
@@ -45,7 +45,7 @@ function Card({attributes}: CompanyCardProps) {
             />
           ) : (
             <Image
-              alt="wise"
+              alt=""
               src={plainCard}
               width={620}
               height={411}
