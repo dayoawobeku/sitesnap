@@ -70,11 +70,17 @@ export default function Layout({children}: LayoutProps) {
   const {data: pages} = usePages();
   const {data: categories} = useCategories();
   const pagesArray = pages?.data?.map((page: Pages) => page.attributes.pages);
-  const flattenedPages = pagesArray?.flat();
   const industries = categories?.data?.map(
     (category: Category) => category?.attributes?.industry,
   );
   const industryCount = industries?.reduce(
+    (acc: {[x: string]: number}, cat: string | number) => {
+      acc[cat] = ++acc[cat] || 1;
+      return acc;
+    },
+    {},
+  );
+  const pageCount = pagesArray?.reduce(
     (acc: {[x: string]: number}, cat: string | number) => {
       acc[cat] = ++acc[cat] || 1;
       return acc;
@@ -160,13 +166,17 @@ export default function Layout({children}: LayoutProps) {
               </li>
               <li className={webpagesTab}>
                 <Link href="/webpages">
-                  <a>Webpages ({flattenedPages?.length ?? '-'})</a>
+                  <a>
+                    Webpages ({pageCount ? Object.keys(pageCount).length : '-'})
+                  </a>
                 </Link>
               </li>
             </ul>
           </div>
           <Modal
-            dialogHeight={results?.length > 0 ? 'h-full' : 'h-fit'}
+            className={`max-w-[832px] gap-6 rounded-2xl ${
+              results?.length > 0 ? 'h-full' : 'h-fit'
+            }`}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
           >
@@ -195,7 +205,10 @@ export default function Layout({children}: LayoutProps) {
                         .replace(/ /g, '-')}`}
                     >
                       <a
-                        onClick={() => setIsOpen(false)}
+                        onClick={() => {
+                          setIsOpen(false);
+                          setSearchTerm('');
+                        }}
                         className="group flex items-center gap-2 rounded-md bg-white py-4 pl-6 text-grey hover:bg-blue hover:text-white focus:bg-blue focus:text-white"
                       >
                         <svg

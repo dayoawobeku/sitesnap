@@ -13,7 +13,7 @@ interface allPages {
 
 function Card({page_name, image_url}: PagesCardProps) {
   return (
-    <div className="flex flex-col gap-5 py-14">
+    <div className="flex cursor-pointer flex-col gap-5 py-14">
       <h2 className="text-md font-medium text-grey">{page_name}</h2>
       <div className="relative">
         {image_url ? (

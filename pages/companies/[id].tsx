@@ -1,10 +1,17 @@
+import {useState} from 'react';
 import type {NextPage} from 'next';
 import Head from 'next/head';
 import {useRouter} from 'next/router';
-import Link from 'next/link';
 import Image from 'next/image';
 import {useCompany} from '../../hooks';
-import {hyperlink, plainCard} from '../../assets/images/images';
+import {
+  closeIc,
+  hyperlink,
+  nextIc,
+  plainCard,
+  prevIc,
+} from '../../assets/images/images';
+import Modal from '../../components/Modal';
 
 interface Page {
   page_name: string;
@@ -13,13 +20,63 @@ interface Page {
 }
 
 const Company: NextPage = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const {data: company, isLoading: loadingCompany} = useCompany(
     router.query.id,
   );
-  console.log(company);
-
   const pagesArray = company?.data[0]?.attributes?.pages;
+
+  // get the page that is currently active
+  const activePage = pagesArray?.find(
+    (page: Page) =>
+      page.page_name.toLowerCase().replace(/ /g, '-') === router.query.page,
+  );
+
+  // get the index of the active page
+  const activePageIndex = pagesArray?.findIndex(
+    (page: Page) => page.page_name === activePage?.page_name,
+  );
+
+  // get the next page
+  function getNextPage() {
+    if (activePageIndex === pagesArray?.length - 1) {
+      const firstPage = pagesArray?.find(
+        (page: Page, index: number) => index === 0,
+      );
+      const firstPageName = firstPage?.page_name
+        .toLowerCase()
+        .replace(/ /g, '-');
+      router.push(`/companies/${router.query.id}?page=${firstPageName}`);
+      return;
+    } else {
+      const nextPage = pagesArray?.find(
+        (page: Page, index: number) => index === activePageIndex + 1,
+      );
+      const nextPageName = nextPage?.page_name.toLowerCase().replace(/ /g, '-');
+      router.push(`/companies/${router.query.id}?page=${nextPageName}`);
+      return nextPage;
+    }
+  }
+
+  // get the previous page
+  function getPrevPage() {
+    if (activePageIndex === 0) {
+      const lastPage = pagesArray?.find(
+        (page: Page, index: number) => index === pagesArray?.length - 1,
+      );
+      const lastPageName = lastPage?.page_name.toLowerCase().replace(/ /g, '-');
+      router.push(`/companies/${router.query.id}?page=${lastPageName}`);
+      return;
+    } else {
+      const prevPage = pagesArray?.find(
+        (page: Page, index: number) => index === activePageIndex - 1,
+      );
+      const prevPageName = prevPage?.page_name.toLowerCase().replace(/ /g, '-');
+      router.push(`/companies/${router.query.id}?page=${prevPageName}`);
+      return prevPage;
+    }
+  }
 
   return (
     <>
@@ -41,6 +98,39 @@ const Company: NextPage = () => {
           visit website
         </a>
       </section>
+
+      <Modal
+        className="h-full max-w-[1199px] bg-white"
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      >
+        <div className="flex items-center justify-between px-12 py-8">
+          <p className="font-medium text-body">
+            {company?.data[0]?.attributes?.name}
+          </p>
+          <p className="font-medium text-body">
+            {activePage?.page_name ?? '-'}
+          </p>
+          <div className="flex items-center gap-6">
+            <button onClick={getPrevPage} className="h-6 w-6">
+              <Image alt="prev" src={prevIc} width={24} height={24} />
+            </button>
+            <button onClick={getNextPage} className="h-6 w-6">
+              <Image alt="next" src={nextIc} width={24} height={24} />
+            </button>
+            <div className="h-4 w-[1px] bg-[#D6D1CA]" />
+            <button
+              onClick={() => {
+                setIsOpen(false);
+                router.push(`/companies/${router.query.id}`);
+              }}
+              className="h-6 w-6"
+            >
+              <Image alt="close" src={closeIc} width={24} height={24} />
+            </button>
+          </div>
+        </div>
+      </Modal>
 
       <section className="grid grid-cols-2 gap-x-12">
         {loadingCompany
@@ -64,7 +154,17 @@ const Company: NextPage = () => {
                       objectFit="cover"
                       placeholder="blur"
                       blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII="
-                      className="rounded-2xl"
+                      className="cursor-pointer rounded-2xl"
+                      onClick={() => {
+                        setIsOpen(true);
+                        router.push(
+                          `/companies/${router.query.id}?page=${page.page_name
+                            .toLowerCase()
+                            .replace(/ /g, '-')}`,
+                          undefined,
+                          {shallow: true},
+                        );
+                      }}
                     />
                   ) : (
                     <Image

@@ -5,14 +5,14 @@ interface ModalProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   children: React.ReactNode;
-  dialogHeight: string;
+  className?: string;
 }
 
 export default function Modal({
   isOpen,
   setIsOpen,
   children,
-  dialogHeight,
+  className,
 }: ModalProps) {
   function closeModal() {
     setIsOpen(false);
@@ -46,7 +46,7 @@ export default function Modal({
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel
-                  className={`${dialogHeight} flex w-full max-w-[832px] transform flex-col gap-6 rounded-2xl text-left align-middle transition-all`}
+                  className={`${className} flex w-full transform flex-col text-left align-middle transition-all`}
                 >
                   {children}
                 </Dialog.Panel>

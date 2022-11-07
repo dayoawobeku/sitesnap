@@ -27,7 +27,6 @@ const Webpages: NextPage = () => {
     );
   });
 
-  console.log(uniquePages);
   return (
     <>
       <Head>
