@@ -102,7 +102,10 @@ const Company: NextPage = () => {
       <Modal
         className="h-full max-w-[1199px] bg-white"
         isOpen={isOpen}
-        setIsOpen={setIsOpen}
+        onClose={() => {
+          setIsOpen(false);
+          router.push(`/companies/${router.query.id}`);
+        }}
       >
         <div className="flex items-center justify-between px-12 py-8">
           <p className="font-medium text-body">

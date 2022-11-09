@@ -1,6 +1,7 @@
 import type {NextPage} from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
+import Link from 'next/link';
 import {plainCard} from '../../assets/images/images';
 import {useCompanies} from '../../hooks';
 
@@ -45,38 +46,45 @@ const Industries: NextPage = () => {
 
       <article className="grid grid-cols-2 gap-x-12 px-3">
         {firstCompanies?.map(company => (
-          <article key={company.id} className="flex flex-col gap-5 py-14">
-            <h2 className="text-lg font-medium text-grey">
-              {company?.attributes?.industry}
-            </h2>
-            <div className="relative">
-              {company?.attributes?.pages[0] ? (
-                <Image
-                  alt=""
-                  src={company?.attributes?.pages[0].image_url}
-                  width={620}
-                  height={411}
-                  layout="responsive"
-                  placeholder="blur"
-                  objectFit="cover"
-                  blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII="
-                  className="rounded-2xl"
-                />
-              ) : (
-                <Image
-                  alt=""
-                  src={plainCard}
-                  width={620}
-                  height={411}
-                  layout="responsive"
-                  objectFit="cover"
-                  placeholder="blur"
-                  blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII="
-                  className="rounded-2xl"
-                />
-              )}
-            </div>
-          </article>
+          <Link
+            key={company.id}
+            href={`/industries/${company?.attributes?.industry
+              .toLowerCase()
+              .replace(/ /g, '-')}`}
+          >
+            <a className="flex flex-col gap-5 py-14">
+              <h2 className="text-lg font-medium text-grey">
+                {company?.attributes?.industry}
+              </h2>
+              <div className="relative">
+                {company?.attributes?.pages[0] ? (
+                  <Image
+                    alt=""
+                    src={company?.attributes?.pages[0].image_url}
+                    width={620}
+                    height={411}
+                    layout="responsive"
+                    placeholder="blur"
+                    objectFit="cover"
+                    blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII="
+                    className="rounded-2xl"
+                  />
+                ) : (
+                  <Image
+                    alt=""
+                    src={plainCard}
+                    width={620}
+                    height={411}
+                    layout="responsive"
+                    objectFit="cover"
+                    placeholder="blur"
+                    blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII="
+                    className="rounded-2xl"
+                  />
+                )}
+              </div>
+            </a>
+          </Link>
         ))}
       </article>
     </>

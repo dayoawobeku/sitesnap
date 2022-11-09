@@ -3,25 +3,21 @@ import {Dialog, Transition} from '@headlessui/react';
 
 interface ModalProps {
   isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
   children: React.ReactNode;
   className?: string;
+  onClose: () => void;
 }
 
 export default function Modal({
   isOpen,
-  setIsOpen,
   children,
   className,
+  onClose,
 }: ModalProps) {
-  function closeModal() {
-    setIsOpen(false);
-  }
-
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
+        <Dialog as="div" className="relative z-10" onClose={onClose}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"

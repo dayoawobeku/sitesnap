@@ -16,6 +16,7 @@ interface Company {
     pages: [
       {
         page_name: string;
+        company_name: string;
       },
     ];
   };
@@ -59,6 +60,8 @@ interface Options {
 const options: Fuse.IFuseOptions<Options> = {
   keys: ['title', 'industry', 'pages'],
   threshold: 0.3,
+  includeMatches: true,
+  shouldSort: true,
 };
 
 export default function Layout({children}: LayoutProps) {
@@ -80,12 +83,12 @@ export default function Layout({children}: LayoutProps) {
     },
     {},
   );
+
   const pageCount = pagesArray?.reduce(
-    (acc: {[x: string]: number}, cat: string | number) => {
-      acc[cat] = ++acc[cat] || 1;
+    (acc: {[x: string]: number}, page: string | number) => {
+      acc[page] = ++acc[page] || 1;
       return acc;
     },
-    {},
   );
 
   // search implemetation with fuse.js
@@ -108,7 +111,23 @@ export default function Layout({children}: LayoutProps) {
   const fuse = new Fuse(companyItems, options);
   const results = companyItems ? fuse.search(searchTerm || '') : [];
 
-  const debouncedChangeHandler = _debounce(changeHandler, 1000);
+  const keySearchResults = results.map(result =>
+    result?.matches?.map(match => match.key),
+  );
+
+  const valueSearchResults = results?.map(result =>
+    result?.matches?.map(match => match.value),
+  );
+
+  const hasKeyPages = keySearchResults.some(function (v) {
+    return v && v.indexOf('pages') >= 0;
+  });
+
+  const hasKeyIndustry = keySearchResults.some(function (v) {
+    return v && v.indexOf('industry') >= 0;
+  });
+
+  const debouncedChangeHandler = _debounce(changeHandler, 500);
 
   // open search dialog on ctrl + k/⌘ + k
   useEffect(() => {
@@ -175,10 +194,13 @@ export default function Layout({children}: LayoutProps) {
           </div>
           <Modal
             className={`max-w-[832px] gap-6 rounded-2xl ${
-              results?.length > 0 ? 'h-full' : 'h-fit'
+              results?.length > 0 ? 'h-fit' : ''
             }`}
             isOpen={isOpen}
-            setIsOpen={setIsOpen}
+            onClose={() => {
+              setIsOpen(false);
+              setSearchTerm('');
+            }}
           >
             <label
               htmlFor="search"
@@ -193,50 +215,137 @@ export default function Layout({children}: LayoutProps) {
                 placeholder="Search"
                 onChange={debouncedChangeHandler}
               />
+              <span className="absolute right-4 text-sm text-body">Esc</span>
             </label>
 
             {searchTerm !== '' && results.length > 0 ? (
               <div className="flex h-fit w-full max-w-full flex-col gap-2 overflow-y-auto rounded-lg bg-white-200 p-6 text-blue shadow-lg">
-                {results?.map(result => (
-                  <div key={result.item.title}>
-                    <Link
-                      href={`/companies/${result.item.title
+                {hasKeyPages ? (
+                  <Link
+                    href={`/webpages/${
+                      valueSearchResults[0] &&
+                      valueSearchResults[0]
+                        .toString()
                         .toLowerCase()
-                        .replace(/ /g, '-')}`}
+                        .replace(/ /g, '-')
+                    }`}
+                  >
+                    <a
+                      onClick={() => {
+                        setIsOpen(false);
+                        setSearchTerm('');
+                      }}
+                      className="group flex items-center gap-2 rounded-md bg-white py-4 pl-6 text-grey hover:bg-blue hover:text-white focus:bg-blue focus:text-white"
                     >
-                      <a
-                        onClick={() => {
-                          setIsOpen(false);
-                          setSearchTerm('');
-                        }}
-                        className="group flex items-center gap-2 rounded-md bg-white py-4 pl-6 text-grey hover:bg-blue hover:text-white focus:bg-blue focus:text-white"
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
                       >
-                        <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 16 16"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
+                        <g clipPath="url(#clip0_206_419)">
+                          <path
+                            d="M0 8C0 9.58225 0.469192 11.129 1.34824 12.4446C2.22729 13.7602 3.47672 14.7855 4.93853 15.391C6.40034 15.9965 8.00887 16.155 9.56072 15.8463C11.1126 15.5376 12.538 14.7757 13.6569 13.6569C14.7757 12.538 15.5376 11.1126 15.8463 9.56072C16.155 8.00887 15.9965 6.40034 15.391 4.93853C14.7855 3.47672 13.7602 2.22729 12.4446 1.34824C11.129 0.469192 9.58225 0 8 0C5.87897 0.00229405 3.84547 0.845886 2.34568 2.34568C0.845886 3.84547 0.00229405 5.87897 0 8H0ZM10.276 7.05733C10.526 7.30737 10.6664 7.64645 10.6664 8C10.6664 8.35355 10.526 8.69263 10.276 8.94267L7.16067 12.058L6.218 11.1153L9.33333 8L6.19267 4.85867L7.13333 3.916L10.276 7.05733Z"
+                            className="group-hover:fill-white group-focus:fill-white"
+                            fill="#1D1C1A"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_206_419">
+                            <rect width="16" height="16" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                      {valueSearchResults[0] &&
+                        valueSearchResults[0].toString()}{' '}
+                      ({valueSearchResults.length})
+                    </a>
+                  </Link>
+                ) : hasKeyIndustry ? (
+                  <Link
+                    href={`/industries/${
+                      valueSearchResults[0] &&
+                      valueSearchResults[0]
+                        .toString()
+                        .toLowerCase()
+                        .replace(/ /g, '-')
+                    }`}
+                  >
+                    <a
+                      onClick={() => {
+                        setIsOpen(false);
+                        setSearchTerm('');
+                      }}
+                      className="group flex items-center gap-2 rounded-md bg-white py-4 pl-6 text-grey hover:bg-blue hover:text-white focus:bg-blue focus:text-white"
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g clipPath="url(#clip0_206_419)">
+                          <path
+                            d="M0 8C0 9.58225 0.469192 11.129 1.34824 12.4446C2.22729 13.7602 3.47672 14.7855 4.93853 15.391C6.40034 15.9965 8.00887 16.155 9.56072 15.8463C11.1126 15.5376 12.538 14.7757 13.6569 13.6569C14.7757 12.538 15.5376 11.1126 15.8463 9.56072C16.155 8.00887 15.9965 6.40034 15.391 4.93853C14.7855 3.47672 13.7602 2.22729 12.4446 1.34824C11.129 0.469192 9.58225 0 8 0C5.87897 0.00229405 3.84547 0.845886 2.34568 2.34568C0.845886 3.84547 0.00229405 5.87897 0 8H0ZM10.276 7.05733C10.526 7.30737 10.6664 7.64645 10.6664 8C10.6664 8.35355 10.526 8.69263 10.276 8.94267L7.16067 12.058L6.218 11.1153L9.33333 8L6.19267 4.85867L7.13333 3.916L10.276 7.05733Z"
+                            className="group-hover:fill-white group-focus:fill-white"
+                            fill="#1D1C1A"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_206_419">
+                            <rect width="16" height="16" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                      {valueSearchResults[0] &&
+                        valueSearchResults[0].toString()}{' '}
+                      ({valueSearchResults.length})
+                    </a>
+                  </Link>
+                ) : (
+                  results?.map(result => (
+                    <div key={result.item.title}>
+                      <Link
+                        href={`/companies/${result.item.title
+                          .toLowerCase()
+                          .replace(/ /g, '-')}`}
+                      >
+                        <a
+                          onClick={() => {
+                            setIsOpen(false);
+                            setSearchTerm('');
+                          }}
+                          className="group flex items-center gap-2 rounded-md bg-white py-4 pl-6 text-grey hover:bg-blue hover:text-white focus:bg-blue focus:text-white"
                         >
-                          <g clipPath="url(#clip0_206_419)">
-                            <path
-                              d="M0 8C0 9.58225 0.469192 11.129 1.34824 12.4446C2.22729 13.7602 3.47672 14.7855 4.93853 15.391C6.40034 15.9965 8.00887 16.155 9.56072 15.8463C11.1126 15.5376 12.538 14.7757 13.6569 13.6569C14.7757 12.538 15.5376 11.1126 15.8463 9.56072C16.155 8.00887 15.9965 6.40034 15.391 4.93853C14.7855 3.47672 13.7602 2.22729 12.4446 1.34824C11.129 0.469192 9.58225 0 8 0C5.87897 0.00229405 3.84547 0.845886 2.34568 2.34568C0.845886 3.84547 0.00229405 5.87897 0 8H0ZM10.276 7.05733C10.526 7.30737 10.6664 7.64645 10.6664 8C10.6664 8.35355 10.526 8.69263 10.276 8.94267L7.16067 12.058L6.218 11.1153L9.33333 8L6.19267 4.85867L7.13333 3.916L10.276 7.05733Z"
-                              className="group-hover:fill-white group-focus:fill-white"
-                              fill="#1D1C1A"
-                            />
-                          </g>
-                          <defs>
-                            <clipPath id="clip0_206_419">
-                              <rect width="16" height="16" fill="white" />
-                            </clipPath>
-                          </defs>
-                        </svg>
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 16 16"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <g clipPath="url(#clip0_206_419)">
+                              <path
+                                d="M0 8C0 9.58225 0.469192 11.129 1.34824 12.4446C2.22729 13.7602 3.47672 14.7855 4.93853 15.391C6.40034 15.9965 8.00887 16.155 9.56072 15.8463C11.1126 15.5376 12.538 14.7757 13.6569 13.6569C14.7757 12.538 15.5376 11.1126 15.8463 9.56072C16.155 8.00887 15.9965 6.40034 15.391 4.93853C14.7855 3.47672 13.7602 2.22729 12.4446 1.34824C11.129 0.469192 9.58225 0 8 0C5.87897 0.00229405 3.84547 0.845886 2.34568 2.34568C0.845886 3.84547 0.00229405 5.87897 0 8H0ZM10.276 7.05733C10.526 7.30737 10.6664 7.64645 10.6664 8C10.6664 8.35355 10.526 8.69263 10.276 8.94267L7.16067 12.058L6.218 11.1153L9.33333 8L6.19267 4.85867L7.13333 3.916L10.276 7.05733Z"
+                                className="group-hover:fill-white group-focus:fill-white"
+                                fill="#1D1C1A"
+                              />
+                            </g>
+                            <defs>
+                              <clipPath id="clip0_206_419">
+                                <rect width="16" height="16" fill="white" />
+                              </clipPath>
+                            </defs>
+                          </svg>
 
-                        {result.item.title}
-                      </a>
-                    </Link>
-                  </div>
-                ))}
+                          {result.item.title}
+                        </a>
+                      </Link>
+                    </div>
+                  ))
+                )}
               </div>
             ) : searchTerm !== '' && results.length === 0 ? (
               <div className="h-fit w-full max-w-full overflow-y-auto rounded-lg bg-white-200 p-6 text-blue shadow-lg">
@@ -245,7 +354,10 @@ export default function Layout({children}: LayoutProps) {
             ) : null}
           </Modal>
           <button
-            onClick={() => setIsOpen(true)}
+            onClick={() => {
+              setIsOpen(true);
+              setSearchTerm('');
+            }}
             id="search-btn"
             className="flex h-13 w-full max-w-[648px] items-center justify-between rounded-lg bg-white-200 px-4 font-medium text-body"
           >
