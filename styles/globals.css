@@ -34,3 +34,9 @@ html {
     @apply hover:text-blue;
   }
 }
+/* 
+.card {
+  display: grid;
+  column-gap: 48px;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+} */

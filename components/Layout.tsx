@@ -4,9 +4,26 @@ import Link from 'next/link';
 import {useRouter} from 'next/router';
 import Fuse from 'fuse.js';
 const _debounce = require('lodash.debounce');
+import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {coffee, search} from '../assets/images/images';
 import Modal from './Modal';
-import {useCategories, useCompanies, usePages} from '../hooks';
+import {getCompanies} from '../queryfns/getCompanies';
+import {getWebpages} from '../queryfns/getWebpages';
+import {getCategories} from '../queryfns/getCategories';
+
+export async function getStaticProps() {
+  const queryClient = new QueryClient();
+  await Promise.all([
+    queryClient.prefetchQuery(['companies'], getCompanies),
+    queryClient.prefetchQuery(['pages'], getWebpages),
+    queryClient.prefetchQuery(['categories'], getCategories),
+  ]);
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+}
 
 interface Company {
   title: string;
@@ -27,6 +44,7 @@ interface Pages {
   attributes: {
     pages: string[];
   };
+  page_name: string;
 }
 
 interface Category {
@@ -69,10 +87,13 @@ export default function Layout({children}: LayoutProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [OS, setOS] = useState('');
 
-  const {data: companies} = useCompanies();
-  const {data: pages} = usePages();
-  const {data: categories} = useCategories();
-  const pagesArray = pages?.data?.map((page: Pages) => page.attributes.pages);
+  const router = useRouter();
+
+  console.log(router);
+
+  const {data: companies} = useQuery(['companies'], getCompanies);
+  const {data: pages} = useQuery(['pages'], getWebpages);
+  const {data: categories} = useQuery(['categories'], getCategories);
   const industries = categories?.data?.map(
     (category: Category) => category?.attributes?.industry,
   );
@@ -84,12 +105,17 @@ export default function Layout({children}: LayoutProps) {
     {},
   );
 
-  const pageCount = pagesArray?.reduce(
+  const pagesArray = pages?.data?.map((page: Pages) => page.attributes.pages);
+  const flattenedPages = pagesArray?.flat();
+  const pagesCount = flattenedPages?.map((page: Pages) => page.page_name);
+  const allPages = pagesCount?.reduce(
     (acc: {[x: string]: number}, page: string | number) => {
       acc[page] = ++acc[page] || 1;
       return acc;
     },
+    {},
   );
+  const pageCount = allPages && Object.keys(allPages).length;
 
   // search implemetation with fuse.js
   const [searchTerm, setSearchTerm] = useState('');
@@ -185,9 +211,7 @@ export default function Layout({children}: LayoutProps) {
               </li>
               <li className={webpagesTab}>
                 <Link href="/webpages">
-                  <a>
-                    Webpages ({pageCount ? Object.keys(pageCount).length : '-'})
-                  </a>
+                  <a>Webpages ({pageCount ?? '-'})</a>
                 </Link>
               </li>
             </ul>

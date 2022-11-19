@@ -1,10 +1,40 @@
+import {useEffect, useState} from 'react';
+import {useRouter} from 'next/router';
 import type {NextPage} from 'next';
 import Head from 'next/head';
+import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import CompanyCard from '../components/CompanyCard';
-import {useCompanies} from '../hooks';
+import {getPaginatedCompanies} from '../queryfns/getPaginatedCompanies';
 
-const Pages: NextPage = () => {
-  const {data: companies} = useCompanies();
+export async function getStaticProps() {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(['companies'], () =>
+    getPaginatedCompanies(1),
+  );
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+}
+
+const Homepage: NextPage = () => {
+  const router = useRouter();
+  const [pageIndex, setPageIndex] = useState(
+    router.query.page ? Number(router.query.page) : 1,
+  );
+
+  useEffect(() => {
+    if (router.query.page) {
+      setPageIndex(Number(router.query.page));
+    }
+  }, [router.query]);
+
+  const {data: companies} = useQuery(
+    ['companies', router.query.page ? Number(router.query.page) : 1],
+    () =>
+      getPaginatedCompanies(router.query.page ? Number(router.query.page) : 1),
+  );
 
   return (
     <>
@@ -27,9 +57,45 @@ const Pages: NextPage = () => {
 
       <section>
         <CompanyCard companies={companies?.data} />
+
+        <div className="mt-10 flex items-end justify-center gap-7">
+          <div className="flex gap-3">
+            <button
+              className="text-body"
+              onClick={() => {
+                setPageIndex(pageIndex - 1);
+                router.push(`/?page=${pageIndex - 1}`, undefined, {
+                  scroll: false,
+                });
+              }}
+              disabled={companies?.meta?.pagination?.page === 1}
+            >
+              Previous
+            </button>
+            <button
+              className="text-body"
+              onClick={() => {
+                setPageIndex(pageIndex + 1);
+                router.push(`/?page=${pageIndex + 1}`, undefined, {
+                  scroll: false,
+                });
+              }}
+              disabled={
+                companies?.meta?.pagination?.page ===
+                companies?.meta?.pagination?.pageCount
+              }
+            >
+              Next
+            </button>
+          </div>
+          <p className="text-sm">
+            Page {companies?.meta?.pagination?.page} of{' '}
+            {companies?.meta?.pagination?.pageCount}
+          </p>
+        </div>
       </section>
     </>
   );
 };
 
-export default Pages;
+export default Homepage;

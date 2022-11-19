@@ -47,14 +47,28 @@ const Company: NextPage = () => {
       const firstPageName = firstPage?.page_name
         .toLowerCase()
         .replace(/ /g, '-');
-      router.push(`/companies/${router.query.id}?page=${firstPageName}`);
+      router.push(
+        `/companies/${router.query.id}?page=${firstPageName}`,
+        undefined,
+        {
+          shallow: true,
+          scroll: false,
+        },
+      );
       return;
     } else {
       const nextPage = pagesArray?.find(
         (page: Page, index: number) => index === activePageIndex + 1,
       );
       const nextPageName = nextPage?.page_name.toLowerCase().replace(/ /g, '-');
-      router.push(`/companies/${router.query.id}?page=${nextPageName}`);
+      router.push(
+        `/companies/${router.query.id}?page=${nextPageName}`,
+        undefined,
+        {
+          shallow: true,
+          scroll: false,
+        },
+      );
       return nextPage;
     }
   }
@@ -66,14 +80,28 @@ const Company: NextPage = () => {
         (page: Page, index: number) => index === pagesArray?.length - 1,
       );
       const lastPageName = lastPage?.page_name.toLowerCase().replace(/ /g, '-');
-      router.push(`/companies/${router.query.id}?page=${lastPageName}`);
+      router.push(
+        `/companies/${router.query.id}?page=${lastPageName}`,
+        undefined,
+        {
+          shallow: true,
+          scroll: false,
+        },
+      );
       return;
     } else {
       const prevPage = pagesArray?.find(
         (page: Page, index: number) => index === activePageIndex - 1,
       );
       const prevPageName = prevPage?.page_name.toLowerCase().replace(/ /g, '-');
-      router.push(`/companies/${router.query.id}?page=${prevPageName}`);
+      router.push(
+        `/companies/${router.query.id}?page=${prevPageName}`,
+        undefined,
+        {
+          shallow: true,
+          scroll: false,
+        },
+      );
       return prevPage;
     }
   }
@@ -104,7 +132,10 @@ const Company: NextPage = () => {
         isOpen={isOpen}
         onClose={() => {
           setIsOpen(false);
-          router.push(`/companies/${router.query.id}`);
+          router.push(`/companies/${router.query.id}`, undefined, {
+            shallow: true,
+            scroll: false,
+          });
         }}
       >
         <div className="flex items-center justify-between px-12 py-8">
@@ -125,7 +156,10 @@ const Company: NextPage = () => {
             <button
               onClick={() => {
                 setIsOpen(false);
-                router.push(`/companies/${router.query.id}`);
+                router.push(`/companies/${router.query.id}`, undefined, {
+                  shallow: true,
+                  scroll: false,
+                });
               }}
               className="h-6 w-6"
             >
@@ -165,7 +199,10 @@ const Company: NextPage = () => {
                             .toLowerCase()
                             .replace(/ /g, '-')}`,
                           undefined,
-                          {shallow: true},
+                          {
+                            shallow: true,
+                            scroll: false,
+                          },
                         );
                       }}
                     />

@@ -1,7 +1,18 @@
 import type {NextPage} from 'next';
 import Head from 'next/head';
+import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import PagesCard from '../../components/PagesCard';
-import {useWebpages} from '../../hooks';
+import {getWebpages} from '../../queryfns/getWebpages';
+
+export async function getStaticProps() {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(['webpages'], getWebpages);
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+}
 
 interface Pages {
   page_name: string;
@@ -11,7 +22,7 @@ interface Pages {
 }
 
 const Webpages: NextPage = () => {
-  const {data: webpages} = useWebpages();
+  const {data: webpages} = useQuery(['webpages'], getWebpages);
 
   const pagesArray = webpages?.data?.map(
     (page: Pages) => page.attributes.pages,
