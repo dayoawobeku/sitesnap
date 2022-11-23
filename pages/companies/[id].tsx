@@ -12,6 +12,7 @@ import {
   prevIc,
 } from '../../assets/images/images';
 import Modal from '../../components/Modal';
+import {slugify} from '../../helpers';
 
 interface Page {
   page_name: string;
@@ -29,8 +30,7 @@ const Company: NextPage = () => {
 
   // get the page that is currently active
   const activePage = pagesArray?.find(
-    (page: Page) =>
-      page.page_name.toLowerCase().replace(/ /g, '-') === router.query.page,
+    (page: Page) => slugify(page.page_name) === router.query.page,
   );
 
   // get the index of the active page
@@ -44,9 +44,8 @@ const Company: NextPage = () => {
       const firstPage = pagesArray?.find(
         (page: Page, index: number) => index === 0,
       );
-      const firstPageName = firstPage?.page_name
-        .toLowerCase()
-        .replace(/ /g, '-');
+      const firstPageName = slugify(firstPage?.page_name);
+
       router.push(
         `/companies/${router.query.id}?page=${firstPageName}`,
         undefined,
@@ -60,7 +59,7 @@ const Company: NextPage = () => {
       const nextPage = pagesArray?.find(
         (page: Page, index: number) => index === activePageIndex + 1,
       );
-      const nextPageName = nextPage?.page_name.toLowerCase().replace(/ /g, '-');
+      const nextPageName = slugify(nextPage?.page_name);
       router.push(
         `/companies/${router.query.id}?page=${nextPageName}`,
         undefined,
@@ -79,7 +78,7 @@ const Company: NextPage = () => {
       const lastPage = pagesArray?.find(
         (page: Page, index: number) => index === pagesArray?.length - 1,
       );
-      const lastPageName = lastPage?.page_name.toLowerCase().replace(/ /g, '-');
+      const lastPageName = slugify(lastPage?.page_name);
       router.push(
         `/companies/${router.query.id}?page=${lastPageName}`,
         undefined,
@@ -93,7 +92,7 @@ const Company: NextPage = () => {
       const prevPage = pagesArray?.find(
         (page: Page, index: number) => index === activePageIndex - 1,
       );
-      const prevPageName = prevPage?.page_name.toLowerCase().replace(/ /g, '-');
+      const prevPageName = slugify(prevPage?.page_name);
       router.push(
         `/companies/${router.query.id}?page=${prevPageName}`,
         undefined,
@@ -195,9 +194,9 @@ const Company: NextPage = () => {
                       onClick={() => {
                         setIsOpen(true);
                         router.push(
-                          `/companies/${router.query.id}?page=${page.page_name
-                            .toLowerCase()
-                            .replace(/ /g, '-')}`,
+                          `/companies/${router.query.id}?page=${slugify(
+                            page.page_name,
+                          )}`,
                           undefined,
                           {
                             shallow: true,

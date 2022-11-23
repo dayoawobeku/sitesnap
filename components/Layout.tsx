@@ -5,11 +5,12 @@ import {useRouter} from 'next/router';
 import Fuse from 'fuse.js';
 const _debounce = require('lodash.debounce');
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
-import {coffee, search} from '../assets/images/images';
+import {search} from '../assets/images/images';
 import Modal from './Modal';
 import {getCompanies} from '../queryfns/getCompanies';
 import {getWebpages} from '../queryfns/getWebpages';
 import {getCategories} from '../queryfns/getCategories';
+import {slugify} from '../helpers';
 
 export async function getStaticProps() {
   const queryClient = new QueryClient();
@@ -87,10 +88,6 @@ export default function Layout({children}: LayoutProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [OS, setOS] = useState('');
 
-  const router = useRouter();
-
-  console.log(router);
-
   const {data: companies} = useQuery(['companies'], getCompanies);
   const {data: pages} = useQuery(['pages'], getWebpages);
   const {data: categories} = useQuery(['categories'], getCategories);
@@ -120,6 +117,8 @@ export default function Layout({children}: LayoutProps) {
   // search implemetation with fuse.js
   const [searchTerm, setSearchTerm] = useState('');
 
+  console.log(searchTerm);
+
   const changeHandler = (e: {
     target: {value: React.SetStateAction<string>};
   }) => {
@@ -142,7 +141,7 @@ export default function Layout({children}: LayoutProps) {
   );
 
   const valueSearchResults = results?.map(result =>
-    result?.matches?.map(match => match.value),
+    result?.matches?.map(match => match.value + ' ' + match.key),
   );
 
   const hasKeyPages = keySearchResults.some(function (v) {
@@ -152,6 +151,43 @@ export default function Layout({children}: LayoutProps) {
   const hasKeyIndustry = keySearchResults.some(function (v) {
     return v && v.indexOf('industry') >= 0;
   });
+
+  const hasKeyTitle = keySearchResults.some(function (v) {
+    return v && v.indexOf('title') >= 0;
+  });
+
+  const filteredPages = valueSearchResults?.map(result => {
+    return result?.filter(value => value?.includes('pages'));
+  });
+
+  const filteredIndustries = valueSearchResults?.map(result => {
+    return result?.filter(value => value?.includes('industry'));
+  });
+
+  const filteredTitles = valueSearchResults?.map(result => {
+    return result?.filter(value => value?.includes('title'));
+  });
+
+  const pageCounts = filteredPages
+    ?.flat()
+    .reduce((acc: {[x: string]: number}, page: string) => {
+      acc[page] = ++acc[page] || 1;
+      return acc;
+    }, {});
+
+  const industryCounts = filteredIndustries
+    .flat()
+    .reduce((acc: {[x: string]: number}, industry: string) => {
+      acc[industry] = ++acc[industry] || 1;
+      return acc;
+    }, {});
+
+  const titleCounts = filteredTitles
+    .flat()
+    .reduce((acc: {[x: string]: number}, title: string) => {
+      acc[title] = ++acc[title] || 1;
+      return acc;
+    }, {});
 
   const debouncedChangeHandler = _debounce(changeHandler, 500);
 
@@ -218,12 +254,11 @@ export default function Layout({children}: LayoutProps) {
           </div>
           <Modal
             className={`max-w-[832px] gap-6 rounded-2xl ${
-              results?.length > 0 ? 'h-fit' : ''
+              results?.length > 0 ? 'h-full' : 'h-fit'
             }`}
             isOpen={isOpen}
             onClose={() => {
               setIsOpen(false);
-              setSearchTerm('');
             }}
           >
             <label
@@ -238,108 +273,26 @@ export default function Layout({children}: LayoutProps) {
                 className="h-[4.25rem] w-full max-w-[832px] pl-11 pr-4"
                 placeholder="Search"
                 onChange={debouncedChangeHandler}
+                defaultValue={searchTerm}
               />
               <span className="absolute right-4 text-sm text-body">Esc</span>
             </label>
 
-            {searchTerm !== '' && results.length > 0 ? (
-              <div className="flex h-fit w-full max-w-full flex-col gap-2 overflow-y-auto rounded-lg bg-white-200 p-6 text-blue shadow-lg">
+            {results?.length > 0 ? (
+              <div className="flex flex-col gap-6 overflow-y-auto rounded-lg bg-white-200 p-6">
                 {hasKeyPages ? (
-                  <Link
-                    href={`/webpages/${
-                      valueSearchResults[0] &&
-                      valueSearchResults[0]
-                        .toString()
-                        .toLowerCase()
-                        .replace(/ /g, '-')
-                    }`}
-                  >
-                    <a
-                      onClick={() => {
-                        setIsOpen(false);
-                        setSearchTerm('');
-                      }}
-                      className="group flex items-center gap-2 rounded-md bg-white py-4 pl-6 text-grey hover:bg-blue hover:text-white focus:bg-blue focus:text-white"
-                    >
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <g clipPath="url(#clip0_206_419)">
-                          <path
-                            d="M0 8C0 9.58225 0.469192 11.129 1.34824 12.4446C2.22729 13.7602 3.47672 14.7855 4.93853 15.391C6.40034 15.9965 8.00887 16.155 9.56072 15.8463C11.1126 15.5376 12.538 14.7757 13.6569 13.6569C14.7757 12.538 15.5376 11.1126 15.8463 9.56072C16.155 8.00887 15.9965 6.40034 15.391 4.93853C14.7855 3.47672 13.7602 2.22729 12.4446 1.34824C11.129 0.469192 9.58225 0 8 0C5.87897 0.00229405 3.84547 0.845886 2.34568 2.34568C0.845886 3.84547 0.00229405 5.87897 0 8H0ZM10.276 7.05733C10.526 7.30737 10.6664 7.64645 10.6664 8C10.6664 8.35355 10.526 8.69263 10.276 8.94267L7.16067 12.058L6.218 11.1153L9.33333 8L6.19267 4.85867L7.13333 3.916L10.276 7.05733Z"
-                            className="group-hover:fill-white group-focus:fill-white"
-                            fill="#1D1C1A"
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_206_419">
-                            <rect width="16" height="16" fill="white" />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                      {valueSearchResults[0] &&
-                        valueSearchResults[0].toString()}{' '}
-                      ({valueSearchResults.length})
-                    </a>
-                  </Link>
-                ) : hasKeyIndustry ? (
-                  <Link
-                    href={`/industries/${
-                      valueSearchResults[0] &&
-                      valueSearchResults[0]
-                        .toString()
-                        .toLowerCase()
-                        .replace(/ /g, '-')
-                    }`}
-                  >
-                    <a
-                      onClick={() => {
-                        setIsOpen(false);
-                        setSearchTerm('');
-                      }}
-                      className="group flex items-center gap-2 rounded-md bg-white py-4 pl-6 text-grey hover:bg-blue hover:text-white focus:bg-blue focus:text-white"
-                    >
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <g clipPath="url(#clip0_206_419)">
-                          <path
-                            d="M0 8C0 9.58225 0.469192 11.129 1.34824 12.4446C2.22729 13.7602 3.47672 14.7855 4.93853 15.391C6.40034 15.9965 8.00887 16.155 9.56072 15.8463C11.1126 15.5376 12.538 14.7757 13.6569 13.6569C14.7757 12.538 15.5376 11.1126 15.8463 9.56072C16.155 8.00887 15.9965 6.40034 15.391 4.93853C14.7855 3.47672 13.7602 2.22729 12.4446 1.34824C11.129 0.469192 9.58225 0 8 0C5.87897 0.00229405 3.84547 0.845886 2.34568 2.34568C0.845886 3.84547 0.00229405 5.87897 0 8H0ZM10.276 7.05733C10.526 7.30737 10.6664 7.64645 10.6664 8C10.6664 8.35355 10.526 8.69263 10.276 8.94267L7.16067 12.058L6.218 11.1153L9.33333 8L6.19267 4.85867L7.13333 3.916L10.276 7.05733Z"
-                            className="group-hover:fill-white group-focus:fill-white"
-                            fill="#1D1C1A"
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_206_419">
-                            <rect width="16" height="16" fill="white" />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                      {valueSearchResults[0] &&
-                        valueSearchResults[0].toString()}{' '}
-                      ({valueSearchResults.length})
-                    </a>
-                  </Link>
-                ) : (
-                  results?.map(result => (
-                    <div key={result.item.title}>
+                  <div className="flex flex-col gap-2">
+                    <p className="text-sm font-bold text-grey">Pages</p>
+                    {Object.entries(pageCounts).map(([key, value]) => (
                       <Link
-                        href={`/companies/${result.item.title
-                          .toLowerCase()
-                          .replace(/ /g, '-')}`}
+                        key={key}
+                        href={`/webpages/${slugify(
+                          key.replace('pages', '').trim(),
+                        )}`}
                       >
                         <a
                           onClick={() => {
                             setIsOpen(false);
-                            setSearchTerm('');
                           }}
                           className="group flex items-center gap-2 rounded-md bg-white py-4 pl-6 text-grey hover:bg-blue hover:text-white focus:bg-blue focus:text-white"
                         >
@@ -363,24 +316,108 @@ export default function Layout({children}: LayoutProps) {
                               </clipPath>
                             </defs>
                           </svg>
-
-                          {result.item.title}
+                          {key.replace('pages', '')} ({value})
                         </a>
                       </Link>
-                    </div>
-                  ))
-                )}
+                    ))}
+                  </div>
+                ) : null}
+
+                {hasKeyIndustry ? (
+                  <div className="flex flex-col gap-2">
+                    <p className="text-sm font-bold text-grey">Categories</p>
+                    {Object.entries(industryCounts).map(([key, value]) => (
+                      <Link
+                        key={key}
+                        href={`/industries/${slugify(
+                          key.replace('industry', '').trim(),
+                        )}`}
+                      >
+                        <a
+                          onClick={() => {
+                            setIsOpen(false);
+                          }}
+                          className="group flex items-center gap-2 rounded-md bg-white py-4 pl-6 text-grey hover:bg-blue hover:text-white focus:bg-blue focus:text-white"
+                        >
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 16 16"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <g clipPath="url(#clip0_206_419)">
+                              <path
+                                d="M0 8C0 9.58225 0.469192 11.129 1.34824 12.4446C2.22729 13.7602 3.47672 14.7855 4.93853 15.391C6.40034 15.9965 8.00887 16.155 9.56072 15.8463C11.1126 15.5376 12.538 14.7757 13.6569 13.6569C14.7757 12.538 15.5376 11.1126 15.8463 9.56072C16.155 8.00887 15.9965 6.40034 15.391 4.93853C14.7855 3.47672 13.7602 2.22729 12.4446 1.34824C11.129 0.469192 9.58225 0 8 0C5.87897 0.00229405 3.84547 0.845886 2.34568 2.34568C0.845886 3.84547 0.00229405 5.87897 0 8H0ZM10.276 7.05733C10.526 7.30737 10.6664 7.64645 10.6664 8C10.6664 8.35355 10.526 8.69263 10.276 8.94267L7.16067 12.058L6.218 11.1153L9.33333 8L6.19267 4.85867L7.13333 3.916L10.276 7.05733Z"
+                                className="group-hover:fill-white group-focus:fill-white"
+                                fill="#1D1C1A"
+                              />
+                            </g>
+                            <defs>
+                              <clipPath id="clip0_206_419">
+                                <rect width="16" height="16" fill="white" />
+                              </clipPath>
+                            </defs>
+                          </svg>
+                          {key.replace('industry', '')} ({value})
+                        </a>
+                      </Link>
+                    ))}
+                  </div>
+                ) : null}
+
+                {hasKeyTitle ? (
+                  <div className="flex flex-col gap-2">
+                    <p className="text-sm font-bold text-grey">Companies</p>
+                    {Object.entries(titleCounts).map(([key]) => (
+                      <Link
+                        key={key}
+                        href={`/companies/${slugify(
+                          key.replace('title', '').trim(),
+                        )}`}
+                      >
+                        <a
+                          onClick={() => {
+                            setIsOpen(false);
+                          }}
+                          className="group flex items-center gap-2 rounded-md bg-white py-4 pl-6 text-grey hover:bg-blue hover:text-white focus:bg-blue focus:text-white"
+                        >
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 16 16"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <g clipPath="url(#clip0_206_419)">
+                              <path
+                                d="M0 8C0 9.58225 0.469192 11.129 1.34824 12.4446C2.22729 13.7602 3.47672 14.7855 4.93853 15.391C6.40034 15.9965 8.00887 16.155 9.56072 15.8463C11.1126 15.5376 12.538 14.7757 13.6569 13.6569C14.7757 12.538 15.5376 11.1126 15.8463 9.56072C16.155 8.00887 15.9965 6.40034 15.391 4.93853C14.7855 3.47672 13.7602 2.22729 12.4446 1.34824C11.129 0.469192 9.58225 0 8 0C5.87897 0.00229405 3.84547 0.845886 2.34568 2.34568C0.845886 3.84547 0.00229405 5.87897 0 8H0ZM10.276 7.05733C10.526 7.30737 10.6664 7.64645 10.6664 8C10.6664 8.35355 10.526 8.69263 10.276 8.94267L7.16067 12.058L6.218 11.1153L9.33333 8L6.19267 4.85867L7.13333 3.916L10.276 7.05733Z"
+                                className="group-hover:fill-white group-focus:fill-white"
+                                fill="#1D1C1A"
+                              />
+                            </g>
+                            <defs>
+                              <clipPath id="clip0_206_419">
+                                <rect width="16" height="16" fill="white" />
+                              </clipPath>
+                            </defs>
+                          </svg>
+                          {key.replace('title', '')}
+                        </a>
+                      </Link>
+                    ))}
+                  </div>
+                ) : null}
               </div>
-            ) : searchTerm !== '' && results.length === 0 ? (
-              <div className="h-fit w-full max-w-full overflow-y-auto rounded-lg bg-white-200 p-6 text-blue shadow-lg">
-                <a className="flex py-1">No results</a>
+            ) : searchTerm.length > 0 ? (
+              <div className="flex rounded-lg bg-white-200 p-6">
+                <p className="text-blue">No results</p>
               </div>
             ) : null}
           </Modal>
           <button
             onClick={() => {
               setIsOpen(true);
-              setSearchTerm('');
             }}
             id="search-btn"
             className="flex h-13 w-full max-w-[648px] items-center justify-between rounded-lg bg-white-200 px-4 font-medium text-body"
@@ -397,10 +434,6 @@ export default function Layout({children}: LayoutProps) {
       <main>{children}</main>
 
       <footer className="px-5 py-6">
-        <button className="mx-auto flex h-13 items-center gap-2 rounded-lg bg-blue px-4">
-          <Image alt="" src={coffee} width={20} height={20} />
-          <span className="font-medium text-white">buy me coffee</span>
-        </button>
         <p className="mt-8 text-body">
           All product and company names are trademarks™ or registered®
           trademarks (including logos, screenshots and icons) remain the

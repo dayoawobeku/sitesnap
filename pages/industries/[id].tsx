@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
 import {plainCard} from '../../assets/images/images';
+import {slugify} from '../../helpers';
 import {useCompanies} from '../../hooks';
 
 function capitalizeFirstLetter(word: string) {
@@ -17,7 +18,7 @@ interface CardProps {
 
 function Card({company_name, image_url}: CardProps) {
   return (
-    <Link href={`/companies/${company_name?.toLowerCase().replace(/ /g, '-')}`}>
+    <Link href={`/companies/${slugify(company_name)}`}>
       <a className="flex flex-col gap-5 py-14">
         <h2 className="text-md font-medium text-grey">{company_name}</h2>
         <div className="relative">

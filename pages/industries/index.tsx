@@ -5,6 +5,7 @@ import Link from 'next/link';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {plainCard} from '../../assets/images/images';
 import {getCompanies} from '../../queryfns/getCompanies';
+import {slugify} from '../../helpers';
 
 export async function getStaticProps() {
   const queryClient = new QueryClient();
@@ -59,9 +60,7 @@ const Industries: NextPage = () => {
         {firstCompanies?.map(company => (
           <Link
             key={company.id}
-            href={`/industries/${company?.attributes?.industry
-              .toLowerCase()
-              .replace(/ /g, '-')}`}
+            href={`/industries/${slugify(company?.attributes?.industry)}`}
           >
             <a className="flex flex-col gap-5 py-14">
               <h2 className="text-lg font-medium text-grey">

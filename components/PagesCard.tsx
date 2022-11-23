@@ -1,6 +1,7 @@
 import Image, {StaticImageData} from 'next/image';
 import Link from 'next/link';
 import {plainCard} from '../assets/images/images';
+import {slugify} from '../helpers';
 
 interface PagesCardProps {
   page_name: string;
@@ -14,7 +15,7 @@ interface allPages {
 
 function Card({page_name, image_url}: PagesCardProps) {
   return (
-    <Link href={`/webpages/${page_name.toLowerCase().replace(/ /g, '-')}`}>
+    <Link href={`/webpages/${slugify(page_name)}`}>
       <a className="flex flex-col gap-5 py-14">
         <h2 className="text-md font-medium text-grey">{page_name}</h2>
         <div className="relative">
