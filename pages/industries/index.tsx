@@ -1,4 +1,4 @@
-import type {NextPage} from 'next';
+import type {GetStaticProps, NextPage} from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -6,16 +6,6 @@ import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {plainCard} from '../../assets/images/images';
 import {getCompanies} from '../../queryfns/getCompanies';
 import {slugify} from '../../helpers';
-
-export async function getStaticProps() {
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(['companiess'], getCompanies);
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-}
 
 interface Company {
   id: string;
@@ -102,3 +92,13 @@ const Industries: NextPage = () => {
 };
 
 export default Industries;
+
+export const getStaticProps: GetStaticProps = async () => {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(['companies'], getCompanies);
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};

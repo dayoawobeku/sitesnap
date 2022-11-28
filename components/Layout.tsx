@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {GetStaticProps} from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
@@ -11,20 +12,6 @@ import {getCompanies} from '../queryfns/getCompanies';
 import {getWebpages} from '../queryfns/getWebpages';
 import {getCategories} from '../queryfns/getCategories';
 import {slugify} from '../helpers';
-
-export async function getStaticProps() {
-  const queryClient = new QueryClient();
-  await Promise.all([
-    queryClient.prefetchQuery(['companies'], getCompanies),
-    queryClient.prefetchQuery(['pages'], getWebpages),
-    queryClient.prefetchQuery(['categories'], getCategories),
-  ]);
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-}
 
 interface Company {
   title: string;
@@ -89,7 +76,7 @@ export default function Layout({children}: LayoutProps) {
   const [OS, setOS] = useState('');
 
   const {data: companies} = useQuery(['companies'], getCompanies);
-  const {data: pages} = useQuery(['pages'], getWebpages);
+  const {data: pages} = useQuery(['webpages'], getWebpages);
   const {data: categories} = useQuery(['categories'], getCategories);
   const industries = categories?.data?.map(
     (category: Category) => category?.attributes?.industry,
@@ -116,8 +103,6 @@ export default function Layout({children}: LayoutProps) {
 
   // search implemetation with fuse.js
   const [searchTerm, setSearchTerm] = useState('');
-
-  console.log(searchTerm);
 
   const changeHandler = (e: {
     target: {value: React.SetStateAction<string>};
@@ -170,22 +155,28 @@ export default function Layout({children}: LayoutProps) {
 
   const pageCounts = filteredPages
     ?.flat()
-    .reduce((acc: {[x: string]: number}, page: string) => {
-      acc[page] = ++acc[page] || 1;
+    .reduce((acc: {[x: string]: number}, page: string | undefined) => {
+      if (page !== undefined) {
+        acc[page] = ++acc[page] || 1;
+      }
       return acc;
     }, {});
 
   const industryCounts = filteredIndustries
     .flat()
-    .reduce((acc: {[x: string]: number}, industry: string) => {
-      acc[industry] = ++acc[industry] || 1;
+    .reduce((acc: {[x: string]: number}, industry: string | undefined) => {
+      if (industry !== undefined) {
+        acc[industry] = ++acc[industry] || 1;
+      }
       return acc;
     }, {});
 
   const titleCounts = filteredTitles
     .flat()
-    .reduce((acc: {[x: string]: number}, title: string) => {
-      acc[title] = ++acc[title] || 1;
+    .reduce((acc: {[x: string]: number}, title: string | undefined) => {
+      if (title !== undefined) {
+        acc[title] = ++acc[title] || 1;
+      }
       return acc;
     }, {});
 
@@ -253,9 +244,7 @@ export default function Layout({children}: LayoutProps) {
             </ul>
           </div>
           <Modal
-            className={`max-w-[832px] gap-6 rounded-2xl ${
-              results?.length > 0 ? 'h-full' : 'h-fit'
-            }`}
+            className="max-h-full max-w-[832px] gap-6 rounded-2xl"
             isOpen={isOpen}
             onClose={() => {
               setIsOpen(false);
@@ -325,7 +314,7 @@ export default function Layout({children}: LayoutProps) {
 
                 {hasKeyIndustry ? (
                   <div className="flex flex-col gap-2">
-                    <p className="text-sm font-bold text-grey">Categories</p>
+                    <p className="text-sm font-bold text-grey">Industries</p>
                     {Object.entries(industryCounts).map(([key, value]) => (
                       <Link
                         key={key}
@@ -443,3 +432,17 @@ export default function Layout({children}: LayoutProps) {
     </div>
   );
 }
+
+export const getStaticProps: GetStaticProps = async () => {
+  const queryClient = new QueryClient();
+  await Promise.all([
+    queryClient.prefetchQuery(['companies'], getCompanies),
+    queryClient.prefetchQuery(['webpages'], getWebpages),
+    queryClient.prefetchQuery(['categories'], getCategories),
+  ]);
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};

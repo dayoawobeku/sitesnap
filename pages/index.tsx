@@ -1,22 +1,10 @@
 import {useEffect, useState} from 'react';
 import {useRouter} from 'next/router';
-import type {NextPage} from 'next';
+import type {GetStaticProps, NextPage} from 'next';
 import Head from 'next/head';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import CompanyCard from '../components/CompanyCard';
 import {getPaginatedCompanies} from '../queryfns/getPaginatedCompanies';
-
-export async function getStaticProps() {
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(['companies'], () =>
-    getPaginatedCompanies(1),
-  );
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-}
 
 const Homepage: NextPage = () => {
   const router = useRouter();
@@ -99,3 +87,15 @@ const Homepage: NextPage = () => {
 };
 
 export default Homepage;
+
+export const getStaticProps: GetStaticProps = async () => {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(['companies', 1], () =>
+    getPaginatedCompanies(1),
+  );
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};

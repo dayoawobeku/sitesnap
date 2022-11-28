@@ -3,9 +3,10 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
+import {useQuery} from '@tanstack/react-query';
 import {plainCard} from '../../assets/images/images';
 import {slugify} from '../../helpers';
-import {useWebpages} from '../../hooks';
+import {getWebpages} from '../../queryfns';
 
 interface CardProps {
   company_name: string;
@@ -62,7 +63,7 @@ interface Pages {
 const IndividualWebpages: NextPage = () => {
   const router = useRouter();
 
-  const {data: webpages} = useWebpages();
+  const {data: webpages} = useQuery(['webpages'], getWebpages);
 
   const pagesArray = webpages?.data?.map(
     (page: Pages) => page.attributes.pages,

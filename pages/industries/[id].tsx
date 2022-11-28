@@ -3,12 +3,13 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
+import {useQuery} from '@tanstack/react-query';
 import {plainCard} from '../../assets/images/images';
 import {slugify} from '../../helpers';
-import {useCompanies} from '../../hooks';
+import {getCompanies} from '../../queryfns';
 
 function capitalizeFirstLetter(word: string) {
-  return word.charAt(0).toUpperCase() + word.slice(1);
+  return word?.charAt(0).toUpperCase() + word?.slice(1);
 }
 
 interface CardProps {
@@ -69,7 +70,7 @@ interface Company {
 const IndividualIndustries: NextPage = () => {
   const router = useRouter();
 
-  const {data: companies} = useCompanies();
+  const {data: companies} = useQuery(['companies'], getCompanies);
 
   const industryName = router.query.id;
 

@@ -1,9 +1,8 @@
 import {useState} from 'react';
-import type {NextPage} from 'next';
+import type {GetStaticPaths, GetStaticProps, NextPage} from 'next';
 import Head from 'next/head';
 import {useRouter} from 'next/router';
 import Image from 'next/image';
-import {useCompany} from '../../hooks';
 import {
   closeIc,
   hyperlink,
@@ -13,6 +12,14 @@ import {
 } from '../../assets/images/images';
 import Modal from '../../components/Modal';
 import {slugify} from '../../helpers';
+import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
+import {getCompanies, getCompany} from '../../queryfns';
+
+interface Company {
+  attributes: {
+    slug: string;
+  };
+}
 
 interface Page {
   page_name: string;
@@ -23,8 +30,8 @@ interface Page {
 const Company: NextPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const {data: company, isLoading: loadingCompany} = useCompany(
-    router.query.id,
+  const {data: company} = useQuery(['company', router.query.id], () =>
+    getCompany(router.query.id),
   );
   const pagesArray = company?.data[0]?.attributes?.pages;
 
@@ -166,64 +173,96 @@ const Company: NextPage = () => {
             </button>
           </div>
         </div>
+        <div className="relative h-full w-full">
+          {activePage ? (
+            <Image
+              alt={activePage?.page_name}
+              src={activePage?.image_url}
+              layout="fill"
+              objectFit="contain"
+            />
+          ) : null}
+        </div>
       </Modal>
 
       <section className="grid grid-cols-2 gap-x-12">
-        {loadingCompany
-          ? '...'
-          : pagesArray?.map((page: Page) => (
-              <article
-                key={page.image_url}
-                className="flex flex-col gap-5 py-14"
-              >
-                <h2 className="text-md font-medium text-grey">
-                  {page?.page_name}
-                </h2>
-                <div className="relative">
-                  {page?.image_url ? (
-                    <Image
-                      alt=""
-                      src={page?.image_url}
-                      width={620}
-                      height={411}
-                      layout="responsive"
-                      objectFit="cover"
-                      placeholder="blur"
-                      blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII="
-                      className="cursor-pointer rounded-2xl"
-                      onClick={() => {
-                        setIsOpen(true);
-                        router.push(
-                          `/companies/${router.query.id}?page=${slugify(
-                            page.page_name,
-                          )}`,
-                          undefined,
-                          {
-                            shallow: true,
-                            scroll: false,
-                          },
-                        );
-                      }}
-                    />
-                  ) : (
-                    <Image
-                      alt=""
-                      src={plainCard}
-                      width={620}
-                      height={411}
-                      layout="responsive"
-                      objectFit="cover"
-                      placeholder="blur"
-                      blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII="
-                      className="rounded-2xl"
-                    />
-                  )}
-                </div>
-              </article>
-            ))}
+        {pagesArray?.map((page: Page) => (
+          <article key={page.image_url} className="flex flex-col gap-5 py-14">
+            <h2 className="text-md font-medium text-grey">{page?.page_name}</h2>
+            <div className="relative">
+              {page?.image_url ? (
+                <Image
+                  alt=""
+                  src={page?.image_url}
+                  width={620}
+                  height={411}
+                  layout="responsive"
+                  objectFit="cover"
+                  placeholder="blur"
+                  blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII="
+                  className="cursor-pointer rounded-2xl"
+                  onClick={() => {
+                    setIsOpen(true);
+                    router.push(
+                      `/companies/${router.query.id}?page=${slugify(
+                        page.page_name,
+                      )}`,
+                      undefined,
+                      {
+                        shallow: true,
+                        scroll: false,
+                      },
+                    );
+                  }}
+                />
+              ) : (
+                <Image
+                  alt=""
+                  src={plainCard}
+                  width={620}
+                  height={411}
+                  layout="responsive"
+                  objectFit="cover"
+                  placeholder="blur"
+                  blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII="
+                  className="rounded-2xl"
+                />
+              )}
+            </div>
+          </article>
+        ))}
       </section>
     </>
   );
 };
 
 export default Company;
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const {data} = await getCompanies();
+
+  const paths = data.map((company: Company) => {
+    return {
+      params: {
+        id: company.attributes.slug,
+      },
+    };
+  });
+
+  return {
+    paths,
+    fallback: false,
+  };
+};
+
+export const getStaticProps: GetStaticProps = async ({params}) => {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(['company', params?.id], () =>
+    getCompany(params?.id),
+  );
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};
