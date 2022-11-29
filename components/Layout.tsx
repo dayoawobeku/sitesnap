@@ -220,7 +220,7 @@ export default function Layout({children}: LayoutProps) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/">
-              <a className="text-md font-medium text-blue">omoui.design</a>
+              <a className="text-md font-medium text-blue">sitesnap.design</a>
             </Link>
             <ul className="nav-ul flex items-center gap-4 font-medium">
               <li className={companyTab}>
