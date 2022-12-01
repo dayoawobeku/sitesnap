@@ -2,6 +2,7 @@ import {Key} from 'react';
 import Image, {StaticImageData} from 'next/image';
 import Link from 'next/link';
 import {plainCard} from '../assets/images/images';
+import {getCompany} from '../queryfns';
 
 interface CompanyCardProps {
   id: Key | null | undefined;
@@ -28,7 +29,12 @@ function Card({attributes}: CompanyCardProps) {
       href={`/companies/${slug?.toLowerCase()}`}
       className="flex flex-col gap-5 py-14"
     >
-      <a className="flex flex-col gap-5 py-14">
+      <a
+        onMouseEnter={() => {
+          getCompany(slug);
+        }}
+        className="flex flex-col gap-5 py-14"
+      >
         <h2 className="text-lg font-medium text-grey">{name}</h2>
         <div className="relative">
           {pages[0].image_url ? (
