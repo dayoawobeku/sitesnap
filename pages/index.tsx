@@ -4,7 +4,7 @@ import type {GetStaticProps, NextPage} from 'next';
 import Head from 'next/head';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import CompanyCard from '../components/CompanyCard';
-import {getPaginatedCompanies} from '../queryfns/getPaginatedCompanies';
+import {getPaginatedCompanies} from '../queryfns';
 
 const Homepage: NextPage = () => {
   const router = useRouter();
@@ -72,6 +72,9 @@ const Homepage: NextPage = () => {
                 companies?.meta?.pagination?.page ===
                 companies?.meta?.pagination?.pageCount
               }
+              onMouseEnter={() => {
+                getPaginatedCompanies(pageIndex + 1);
+              }}
             >
               Next
             </button>
