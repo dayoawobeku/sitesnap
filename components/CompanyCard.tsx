@@ -26,8 +26,11 @@ function Card({attributes}: CompanyCardProps) {
   const {name, pages, description, slug} = attributes;
   return (
     <Link
-      href={`/companies/${slug?.toLowerCase()}`}
+      href={`/companies/${encodeURIComponent(slug?.toLowerCase())}`}
+      key={slug}
+      as={`/companies/${slug?.toLowerCase()}`}
       className="flex flex-col gap-5 py-14"
+      passHref
     >
       <a
         onMouseEnter={() => {
@@ -37,7 +40,7 @@ function Card({attributes}: CompanyCardProps) {
       >
         <h2 className="text-lg font-medium text-grey">{name}</h2>
         <div className="relative">
-          {pages[0].image_url ? (
+          {pages[0]?.image_url ? (
             <Image
               alt=""
               src={pages[0].image_url}

@@ -114,7 +114,7 @@ export default function Layout({children}: LayoutProps) {
     return {
       title: company?.attributes?.name,
       industry: company?.attributes?.industry,
-      pages: company?.attributes?.pages.map(page => page.page_name),
+      pages: company?.attributes?.pages?.map(page => page.page_name),
     };
   });
 
