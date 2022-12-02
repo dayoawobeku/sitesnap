@@ -26,11 +26,10 @@ function Card({attributes}: CompanyCardProps) {
   const {name, pages, description, slug} = attributes;
   return (
     <Link
-      href={`/companies/${encodeURIComponent(slug?.toLowerCase())}`}
+      href={`/companies/${(slug?.toLowerCase())}`}
       key={slug}
       as={`/companies/${slug?.toLowerCase()}`}
       className="flex flex-col gap-5 py-14"
-      passHref
     >
       <a
         onMouseEnter={() => {
