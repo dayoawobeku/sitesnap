@@ -1,10 +1,5 @@
 import {useState} from 'react';
-import type {
-  GetServerSideProps,
-  GetStaticPaths,
-  GetStaticProps,
-  NextPage,
-} from 'next';
+import type {GetServerSideProps, NextPage} from 'next';
 import Head from 'next/head';
 import {useRouter} from 'next/router';
 import Image from 'next/image';
@@ -18,7 +13,7 @@ import {
 import Modal from '../../components/Modal';
 import {slugify} from '../../helpers';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
-import {getCompanies, getCompany} from '../../queryfns';
+import {getCompany} from '../../queryfns';
 
 interface Company {
   attributes: {
@@ -38,7 +33,6 @@ const Company: NextPage = () => {
   const {data: company} = useQuery(['company', router.query.id], () =>
     getCompany(router.query.id),
   );
-  console.log(company, 'company');
   const pagesArray = company?.data[0]?.attributes?.pages;
 
   // get the page that is currently active
@@ -195,7 +189,7 @@ const Company: NextPage = () => {
         {pagesArray?.map((page: Page) => (
           <article key={page.image_url} className="flex flex-col gap-5 py-14">
             <h2 className="text-md font-medium text-grey">{page?.page_name}</h2>
-            <div className="relative">
+            <div className="relative rounded-2xl border-[0.5px] border-body">
               {page?.image_url ? (
                 <Image
                   alt=""
@@ -244,38 +238,7 @@ const Company: NextPage = () => {
 
 export default Company;
 
-// export const getStaticPaths: GetStaticPaths = async () => {
-//   const {data} = await getCompanies();
-
-//   const paths = data.map((company: Company) => {
-//     return {
-//       params: {
-//         id: company.attributes.slug,
-//       },
-//     };
-//   });
-
-//   return {
-//     paths,
-//     fallback: false,
-//   };
-// };
-
-// export const getStaticProps: GetStaticProps = async ({params}) => {
-//   console.log(params);
-//   const queryClient = new QueryClient();
-//   await queryClient.prefetchQuery(['company', params?.id], () =>
-//     getCompany(params?.id),
-//   );
-//   return {
-//     props: {
-//       dehydratedState: dehydrate(queryClient),
-//     },
-//   };
-// };
-
 export const getServerSideProps: GetServerSideProps = async ({params}) => {
-  console.log(params, 'params');
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(['company', params?.id], () =>
     getCompany(params?.id),

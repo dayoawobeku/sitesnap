@@ -56,7 +56,7 @@ const Industries: NextPage = () => {
               <h2 className="text-lg font-medium text-grey">
                 {company?.attributes?.industry}
               </h2>
-              <div className="relative">
+              <div className="relative rounded-2xl border-[0.5px] border-body">
                 {company?.attributes?.pages[0] ? (
                   <Image
                     alt=""
