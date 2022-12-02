@@ -18,7 +18,7 @@ function Card({page_name, image_url}: PagesCardProps) {
     <Link href={`/webpages/${slugify(page_name)}`}>
       <a className="flex flex-col gap-5 py-14">
         <h2 className="text-md font-medium text-grey">{page_name}</h2>
-        <div className="relative">
+        <div className="relative rounded-2xl border-[0.5px] border-body">
           {image_url ? (
             <Image
               alt=""

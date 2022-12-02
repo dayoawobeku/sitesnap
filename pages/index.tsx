@@ -72,9 +72,6 @@ const Homepage: NextPage = () => {
                 companies?.meta?.pagination?.page ===
                 companies?.meta?.pagination?.pageCount
               }
-              onMouseEnter={() => {
-                getPaginatedCompanies(pageIndex + 1);
-              }}
             >
               Next
             </button>
