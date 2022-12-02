@@ -1,5 +1,10 @@
 import {useState} from 'react';
-import type {GetStaticPaths, GetStaticProps, NextPage} from 'next';
+import type {
+  GetServerSideProps,
+  GetStaticPaths,
+  GetStaticProps,
+  NextPage,
+} from 'next';
 import Head from 'next/head';
 import {useRouter} from 'next/router';
 import Image from 'next/image';
@@ -33,6 +38,7 @@ const Company: NextPage = () => {
   const {data: company} = useQuery(['company', router.query.id], () =>
     getCompany(router.query.id),
   );
+  console.log(company, 'company');
   const pagesArray = company?.data[0]?.attributes?.pages;
 
   // get the page that is currently active
@@ -238,24 +244,38 @@ const Company: NextPage = () => {
 
 export default Company;
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const {data} = await getCompanies();
+// export const getStaticPaths: GetStaticPaths = async () => {
+//   const {data} = await getCompanies();
 
-  const paths = data.map((company: Company) => {
-    return {
-      params: {
-        id: company.attributes.slug,
-      },
-    };
-  });
+//   const paths = data.map((company: Company) => {
+//     return {
+//       params: {
+//         id: company.attributes.slug,
+//       },
+//     };
+//   });
 
-  return {
-    paths,
-    fallback: false,
-  };
-};
+//   return {
+//     paths,
+//     fallback: false,
+//   };
+// };
 
-export const getStaticProps: GetStaticProps = async ({params}) => {
+// export const getStaticProps: GetStaticProps = async ({params}) => {
+//   console.log(params);
+//   const queryClient = new QueryClient();
+//   await queryClient.prefetchQuery(['company', params?.id], () =>
+//     getCompany(params?.id),
+//   );
+//   return {
+//     props: {
+//       dehydratedState: dehydrate(queryClient),
+//     },
+//   };
+// };
+
+export const getServerSideProps: GetServerSideProps = async ({params}) => {
+  console.log(params, 'params');
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(['company', params?.id], () =>
     getCompany(params?.id),

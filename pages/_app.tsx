@@ -25,6 +25,7 @@ function MyApp({Component, pageProps}: AppProps<MyAppProps>) {
         },
       }),
   );
+  console.log(pageProps, 'pageProps');
   return (
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}>
