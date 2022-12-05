@@ -1,7 +1,16 @@
-export default function ErrorPage() {
+import type {NextPage} from 'next';
+import Head from 'next/head';
+
+const ErrorPage: NextPage = () => {
   return (
-    <div className="my-10">
-      <h1 className="text-xl font-medium text-blue">404 - Page Not Found</h1>
-    </div>
+    <>
+      <Head>
+        <title>404 - Page not found</title>
+      </Head>
+
+      <h1 className="text-blue">404 - Page Not Found</h1>
+    </>
   );
-}
+};
+
+export default ErrorPage;
