@@ -5,10 +5,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  if (
-    req.query.secret !== process.env.NEXT_PUBLIC_PREVIEW_TOKEN ||
-    !req.query.slug
-  ) {
+  if (req.query.secret !== process.env.PREVIEW_TOKEN || !req.query.slug) {
     return res.status(401).json({message: 'Invalid token'});
   }
 
