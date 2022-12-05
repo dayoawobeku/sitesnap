@@ -2,18 +2,12 @@ import {useState} from 'react';
 import type {GetServerSideProps, NextPage} from 'next';
 import Head from 'next/head';
 import {useRouter} from 'next/router';
-import Image from 'next/image';
-import {
-  closeIc,
-  hyperlink,
-  nextIc,
-  plainCard,
-  prevIc,
-} from '../../assets/images/images';
-import Modal from '../../components/Modal';
+import Image, {StaticImageData} from 'next/image';
+import {closeIc, hyperlink, nextIc, prevIc} from '../../assets/images/images';
 import {slugify} from '../../helpers';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {getCompany} from '../../queryfns';
+import {Card, Modal} from '../../components';
 
 interface Company {
   attributes: {
@@ -24,7 +18,8 @@ interface Company {
 interface Page {
   page_name: string;
   page_url: string;
-  image_url: string;
+  image_url: StaticImageData;
+  company_name: string;
 }
 
 const Company: NextPage = () => {
@@ -118,8 +113,8 @@ const Company: NextPage = () => {
         <title>Company</title>
       </Head>
 
-      <section className="flex items-center justify-between py-16">
-        <h1 className="text-xl font-medium text-grey">
+      <section className="flex flex-col items-start justify-between gap-4 py-16 sm:flex-row sm:items-center sm:gap-0">
+        <h1 className="text-lg font-medium text-grey md:text-xl">
           {company?.data[0]?.attributes?.name}
         </h1>
         <a
@@ -185,50 +180,28 @@ const Company: NextPage = () => {
         </div>
       </Modal>
 
-      <section className="grid grid-cols-2 gap-x-12">
-        {pagesArray?.map((page: Page) => (
-          <article key={page.image_url} className="flex flex-col gap-5 py-14">
+      <section className="card">
+        {pagesArray?.map((page: Page, index: number) => (
+          <article key={index} className="flex flex-col gap-5 py-0 lg:py-14">
             <h2 className="text-md font-medium text-grey">{page?.page_name}</h2>
-            <div className="relative rounded-2xl border-[0.5px] border-body">
-              {page?.image_url ? (
-                <Image
-                  alt=""
-                  src={page?.image_url}
-                  width={620}
-                  height={411}
-                  layout="responsive"
-                  objectFit="cover"
-                  placeholder="blur"
-                  blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII="
-                  className="cursor-pointer rounded-2xl"
-                  onClick={() => {
-                    setIsOpen(true);
-                    router.push(
-                      `/companies/${router.query.id}?page=${slugify(
-                        page.page_name,
-                      )}`,
-                      undefined,
-                      {
-                        shallow: true,
-                        scroll: false,
-                      },
-                    );
-                  }}
-                />
-              ) : (
-                <Image
-                  alt=""
-                  src={plainCard}
-                  width={620}
-                  height={411}
-                  layout="responsive"
-                  objectFit="cover"
-                  placeholder="blur"
-                  blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII="
-                  className="rounded-2xl"
-                />
-              )}
-            </div>
+            <Card
+              src={page?.image_url}
+              alt={page?.company_name + ' ' + page?.page_name}
+              image_data={page?.image_url}
+              onClick={() => {
+                setIsOpen(true);
+                router.push(
+                  `/companies/${router.query.id}?page=${slugify(
+                    page.page_name,
+                  )}`,
+                  undefined,
+                  {
+                    shallow: true,
+                    scroll: false,
+                  },
+                );
+              }}
+            />
           </article>
         ))}
       </section>

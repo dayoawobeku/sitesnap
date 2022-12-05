@@ -6,7 +6,7 @@ import {useRouter} from 'next/router';
 import Fuse from 'fuse.js';
 const _debounce = require('lodash.debounce');
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
-import {search} from '../assets/images/images';
+import {hamburger, search} from '../assets/images/images';
 import Modal from './Modal';
 import {getCompanies} from '../queryfns/getCompanies';
 import {getWebpages} from '../queryfns/getWebpages';
@@ -216,19 +216,27 @@ export default function Layout({children}: LayoutProps) {
 
   return (
     <div className="mx-auto max-w-[1345px] px-4">
-      <nav className="py-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
+      <nav className="pt-6 lg:py-8">
+        <div className="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center lg:gap-0">
+          <div className="flex w-full items-center justify-between gap-2 lg:justify-start lg:gap-2 xl:gap-4">
             <Link href="/">
               <a className="text-md font-medium text-blue">sitesnap.design</a>
             </Link>
-            <ul className="nav-ul flex items-center gap-4 font-medium">
-              <li className={companyTab}>
+            <div className="h-[31px] w-[31px] lg:hidden">
+              <Image
+                src={hamburger}
+                alt="hamburger menu"
+                width={31}
+                height={31}
+              />
+            </div>
+            <ul className="nav-ul hidden items-center gap-2 font-medium md:mr-2 lg:mr-4 lg:flex lg:gap-4">
+              <li className={`${companyTab} whitespace-nowrap`}>
                 <Link href="/companies">
                   <a>Companies ({companies?.data.length ?? '-'})</a>
                 </Link>
               </li>
-              <li className={industryTab}>
+              <li className={`${industryTab} whitespace-nowrap`}>
                 <Link href="/industries">
                   <a>
                     Industries (
@@ -236,7 +244,7 @@ export default function Layout({children}: LayoutProps) {
                   </a>
                 </Link>
               </li>
-              <li className={webpagesTab}>
+              <li className={`${webpagesTab} whitespace-nowrap`}>
                 <Link href="/webpages">
                   <a>Webpages ({pageCount ?? '-'})</a>
                 </Link>
@@ -252,14 +260,14 @@ export default function Layout({children}: LayoutProps) {
           >
             <label
               htmlFor="search"
-              className="relative flex h-[4.25rem] w-full max-w-[832px] items-center justify-between"
+              className="relative flex h-[3.25rem] w-full max-w-[832px] items-center justify-between lg:h-[4.25rem]"
             >
               <div className="absolute left-4 h-5 w-5">
                 <Image alt="" src={search} width={20} height={20} />
               </div>
               <input
                 id="search"
-                className="h-[4.25rem] w-full max-w-[832px] pl-11 pr-4"
+                className="h-[3.25rem] w-full max-w-[832px] pl-11 pr-4 lg:h-[4.25rem]"
                 placeholder="Search"
                 onChange={debouncedChangeHandler}
                 defaultValue={searchTerm}
@@ -409,21 +417,23 @@ export default function Layout({children}: LayoutProps) {
               setIsOpen(true);
             }}
             id="search-btn"
-            className="flex h-13 w-full max-w-[648px] items-center justify-between rounded-lg bg-white-200 px-4 font-medium text-body"
+            className="flex h-13 w-full items-center justify-between rounded-lg bg-white-200 px-4 font-medium text-body lg:max-w-[648px]"
           >
-            <div className="flex items-center gap-2">
+            <div className="flex w-full items-center gap-2 md:w-auto">
               <Image alt="" src={search} width={20} height={20} />
-              <span>Search companies, industries, webpages</span>
+              <span className="overflow-hidden text-ellipsis whitespace-nowrap">
+                Search companies, industries, webpages
+              </span>
             </div>
-            <span className="text-sm">{OS} + K</span>
+            <span className="hidden text-sm lg:block">{OS} + K</span>
           </button>
         </div>
       </nav>
 
       <main>{children}</main>
 
-      <footer className="px-5 py-6">
-        <p className="mt-8 text-body">
+      <footer className="py-6 md:px-5">
+        <p className="-mx-2 text-center text-[0.75rem] text-body md:mt-8 md:text-base">
           All product and company names are trademarks™ or registered®
           trademarks (including logos, screenshots and icons) remain the
           property of their respective owners.
