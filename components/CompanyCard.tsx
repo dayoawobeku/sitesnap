@@ -1,8 +1,7 @@
 import {Key} from 'react';
-import Image, {StaticImageData} from 'next/image';
+import {StaticImageData} from 'next/image';
 import Link from 'next/link';
-import {plainCard} from '../assets/images/images';
-import {getCompany} from '../queryfns';
+import Card from './Card';
 
 interface CompanyCardProps {
   id: Key | null | undefined;
@@ -22,59 +21,27 @@ interface allCompanies {
   companies: CompanyCardProps[];
 }
 
-function Card({attributes}: CompanyCardProps) {
-  const {name, pages, description, slug} = attributes;
-  return (
-    <Link
-      href={`/companies/${slug?.toLowerCase()}`}
-      key={slug}
-      as={`/companies/${slug?.toLowerCase()}`}
-    >
-      <a
-        onMouseEnter={() => {
-          getCompany(slug);
-        }}
-        className="flex flex-col gap-5 py-14"
-      >
-        <h2 className="text-lg font-medium text-grey">{name}</h2>
-        <div className="relative rounded-2xl border-[0.5px] border-body">
-          {pages[0]?.image_url ? (
-            <Image
-              alt=""
-              src={pages[0].image_url}
-              width={620}
-              height={411}
-              layout="responsive"
-              placeholder="blur"
-              objectFit="cover"
-              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII="
-              className="rounded-2xl"
-            />
-          ) : (
-            <Image
-              alt=""
-              src={plainCard}
-              width={620}
-              height={411}
-              layout="responsive"
-              objectFit="cover"
-              placeholder="blur"
-              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII="
-              className="rounded-2xl"
-            />
-          )}
-        </div>
-        <p className="text-body">{description}</p>
-      </a>
-    </Link>
-  );
-}
-
 export default function CompanyCard({companies}: allCompanies) {
   return (
-    <article className="grid grid-cols-2 gap-x-12 px-3">
-      {companies?.map(company => (
-        <Card key={company.id} {...company} />
+    <article className="card lg:px-3">
+      {companies?.map(({attributes}) => (
+        <Link
+          href={`/companies/${attributes.slug?.toLowerCase()}`}
+          key={attributes.slug}
+          as={`/companies/${attributes.slug?.toLowerCase()}`}
+        >
+          <a className="flex flex-col gap-5 py-0 lg:py-14">
+            <h2 className="text-md font-medium text-grey md:text-lg">
+              {attributes.name}
+            </h2>
+            <Card
+              src={attributes.pages[0]?.image_url}
+              alt=""
+              image_data={attributes.pages[0]?.image_url}
+            />
+            <p className="text-body">{attributes.description}</p>
+          </a>
+        </Link>
       ))}
     </article>
   );

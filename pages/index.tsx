@@ -32,15 +32,17 @@ const Homepage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <section className="mx-auto max-w-[922px] py-20 text-center">
-        <h1 className="text-2xl font-bold text-grey">
+      <section className="mx-auto my-6 max-w-[922px] py-4 text-center lg:my-0 lg:py-20">
+        <h1 className="text-[1.875rem] font-bold text-grey lg:text-2xl">
           Find your favorite sites in one place, then learn from the greats.
         </h1>
-        <p className="mt-6 mb-2 text-md font-medium text-body">
+        <p className="mx-auto mt-6 mb-2 max-w-[852px] text-base font-medium text-body lg:text-md">
           We track each of these sites and update our collection regularly to
           include the latest designs.
         </p>
-        <p className="text-md font-medium text-blue">*No account needed</p>
+        <p className="text-base font-medium text-blue lg:text-md">
+          *No account needed
+        </p>
       </section>
 
       <section>

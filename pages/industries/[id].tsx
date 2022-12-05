@@ -1,64 +1,18 @@
 import type {NextPage} from 'next';
 import Head from 'next/head';
-import Image from 'next/image';
+import {StaticImageData} from 'next/image';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
 import {useQuery} from '@tanstack/react-query';
-import {plainCard} from '../../assets/images/images';
-import {slugify} from '../../helpers';
+import {capitalizeFirstLetter, slugify} from '../../helpers';
 import {getCompanies} from '../../queryfns';
-
-function capitalizeFirstLetter(word: string) {
-  return word?.charAt(0).toUpperCase() + word?.slice(1);
-}
-
-interface CardProps {
-  company_name: string;
-  image_url: string;
-}
-
-function Card({company_name, image_url}: CardProps) {
-  return (
-    <Link href={`/companies/${slugify(company_name)}`}>
-      <a className="flex flex-col gap-5 py-14">
-        <h2 className="text-md font-medium text-grey">{company_name}</h2>
-        <div className="relative rounded-2xl border-[0.5px] border-body">
-          {image_url ? (
-            <Image
-              alt=""
-              src={image_url}
-              width={620}
-              height={411}
-              layout="responsive"
-              objectFit="cover"
-              placeholder="blur"
-              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII="
-              className="rounded-2xl"
-            />
-          ) : (
-            <Image
-              alt=""
-              src={plainCard}
-              width={620}
-              height={411}
-              layout="responsive"
-              placeholder="blur"
-              objectFit="cover"
-              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII="
-              className="rounded-2xl"
-            />
-          )}
-        </div>
-      </a>
-    </Link>
-  );
-}
+import {Card, HeadingOne} from '../../components';
 
 interface Company {
   id: string;
   name: string;
   pages: {
-    image_url: string;
+    image_url: StaticImageData;
   }[];
   attributes: {
     industry: string;
@@ -91,20 +45,23 @@ const IndividualIndustries: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <section className="py-16">
-        <h1 className="text-xl font-medium text-grey">
-          {capitalizeFirstLetter(industryName as string)}
-        </h1>
-      </section>
+      <HeadingOne text={capitalizeFirstLetter(industryName as string)} />
 
       <section>
-        <div className="grid grid-cols-2 gap-x-12 px-3">
+        <div className="card lg:px-3">
           {companiesList?.map((company: Company, index: number) => (
-            <Card
-              key={index}
-              company_name={company.name}
-              image_url={company?.pages[0]?.image_url}
-            />
+            <Link key={index} href={`/companies/${slugify(company.name)}`}>
+              <a className="flex flex-col gap-5 py-0 lg:py-14">
+                <h2 className="text-md font-medium text-grey">
+                  {company.name}
+                </h2>
+                <Card
+                  src={company?.pages[0]?.image_url}
+                  alt=""
+                  image_data={company?.pages[0]?.image_url}
+                />
+              </a>
+            </Link>
           ))}
         </div>
       </section>

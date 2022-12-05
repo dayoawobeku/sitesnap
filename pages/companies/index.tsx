@@ -1,8 +1,8 @@
 import type {GetStaticProps, NextPage} from 'next';
 import Head from 'next/head';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
-import CompanyCard from '../../components/CompanyCard';
 import {getCompanies} from '../../queryfns';
+import {CompanyCard, HeadingOne} from '../../components';
 
 const Companies: NextPage = () => {
   const {data: companies} = useQuery(['companies'], getCompanies);
@@ -15,9 +15,7 @@ const Companies: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <section className="py-16">
-        <h1 className="text-xl font-medium text-grey">All companies</h1>
-      </section>
+      <HeadingOne text="All companies" />
 
       <section>
         <CompanyCard companies={companies?.data} />

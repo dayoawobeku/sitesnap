@@ -3,6 +3,7 @@ import Head from 'next/head';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import PagesCard from '../../components/PagesCard';
 import {getWebpages} from '../../queryfns/getWebpages';
+import {HeadingOne} from '../../components';
 
 interface Pages {
   page_name: string;
@@ -34,9 +35,7 @@ const Webpages: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <section className="py-16">
-        <h1 className="text-xl font-medium text-grey">Webpages</h1>
-      </section>
+      <HeadingOne text="Webpages" />
 
       <section>
         <PagesCard pages={uniquePages} />

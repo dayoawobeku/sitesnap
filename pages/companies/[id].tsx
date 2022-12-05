@@ -2,18 +2,13 @@ import {useState} from 'react';
 import type {GetServerSideProps, NextPage} from 'next';
 import Head from 'next/head';
 import {useRouter} from 'next/router';
-import Image from 'next/image';
-import {
-  closeIc,
-  hyperlink,
-  nextIc,
-  plainCard,
-  prevIc,
-} from '../../assets/images/images';
-import Modal from '../../components/Modal';
+import Image, {StaticImageData} from 'next/image';
+import {closeIc, hyperlink, nextIc, prevIc} from '../../assets/images/images';
 import {slugify} from '../../helpers';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {getCompany} from '../../queryfns';
+import {Card, Modal} from '../../components';
+import axios from 'axios';
 
 interface Company {
   attributes: {
@@ -24,16 +19,34 @@ interface Company {
 interface Page {
   page_name: string;
   page_url: string;
-  image_url: string;
+  image_url: StaticImageData;
+  company_name: string;
 }
 
-const Company: NextPage = () => {
+interface PreviewData {
+  data: [
+    {
+      attributes: {
+        name: string;
+        pages: Page[];
+        url: string;
+      };
+    },
+  ];
+}
+
+const Company: NextPage<{
+  preview: boolean;
+  previewData: PreviewData;
+}> = ({previewData, preview}) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const {data: company} = useQuery(['company', router.query.id], () =>
     getCompany(router.query.id),
   );
-  const pagesArray = company?.data[0]?.attributes?.pages;
+  const pagesArray =
+    company?.data[0]?.attributes?.pages ||
+    previewData?.data[0]?.attributes?.pages;
 
   // get the page that is currently active
   const activePage = pagesArray?.find(
@@ -118,12 +131,30 @@ const Company: NextPage = () => {
         <title>Company</title>
       </Head>
 
-      <section className="flex items-center justify-between py-16">
-        <h1 className="text-xl font-medium text-grey">
-          {company?.data[0]?.attributes?.name}
+      {preview ? (
+        <div className="my-4 w-fit text-blue">
+          <span>You are currently viewing in Preview Mode.</span> {''}
+          <button
+            className="font-bold text-[#A13E3F] underline"
+            onClick={() => exitPreviewMode()}
+          >
+            Turn Off Preview Mode
+          </button>
+        </div>
+      ) : (
+        ''
+      )}
+
+      <section className="flex flex-col items-start justify-between gap-4 py-16 sm:flex-row sm:items-center sm:gap-0">
+        <h1 className="text-lg font-medium text-grey md:text-xl">
+          {company?.data[0]?.attributes?.name ||
+            previewData?.data[0]?.attributes?.name}
         </h1>
         <a
-          href={company?.data[0]?.attributes?.url}
+          href={
+            company?.data[0]?.attributes?.url ||
+            previewData?.data[0]?.attributes?.url
+          }
           target="_blank"
           rel="noreferrer"
           className="flex items-center gap-2 rounded-lg bg-white-200 p-4 font-medium outline outline-1 outline-body transition-all hover:bg-white"
@@ -146,7 +177,8 @@ const Company: NextPage = () => {
       >
         <div className="flex items-center justify-between px-12 py-8">
           <p className="font-medium text-body">
-            {company?.data[0]?.attributes?.name}
+            {company?.data[0]?.attributes?.name ||
+              previewData?.data[0]?.attributes?.name}
           </p>
           <p className="font-medium text-body">
             {activePage?.page_name ?? '-'}
@@ -185,50 +217,28 @@ const Company: NextPage = () => {
         </div>
       </Modal>
 
-      <section className="grid grid-cols-2 gap-x-12">
-        {pagesArray?.map((page: Page) => (
-          <article key={page.image_url} className="flex flex-col gap-5 py-14">
+      <section className="card">
+        {pagesArray?.map((page: Page, index: number) => (
+          <article key={index} className="flex flex-col gap-5 py-0 lg:py-14">
             <h2 className="text-md font-medium text-grey">{page?.page_name}</h2>
-            <div className="relative rounded-2xl border-[0.5px] border-body">
-              {page?.image_url ? (
-                <Image
-                  alt=""
-                  src={page?.image_url}
-                  width={620}
-                  height={411}
-                  layout="responsive"
-                  objectFit="cover"
-                  placeholder="blur"
-                  blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII="
-                  className="cursor-pointer rounded-2xl"
-                  onClick={() => {
-                    setIsOpen(true);
-                    router.push(
-                      `/companies/${router.query.id}?page=${slugify(
-                        page.page_name,
-                      )}`,
-                      undefined,
-                      {
-                        shallow: true,
-                        scroll: false,
-                      },
-                    );
-                  }}
-                />
-              ) : (
-                <Image
-                  alt=""
-                  src={plainCard}
-                  width={620}
-                  height={411}
-                  layout="responsive"
-                  objectFit="cover"
-                  placeholder="blur"
-                  blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII="
-                  className="rounded-2xl"
-                />
-              )}
-            </div>
+            <Card
+              src={page?.image_url}
+              alt={page?.company_name + ' ' + page?.page_name}
+              image_data={page?.image_url}
+              onClick={() => {
+                setIsOpen(true);
+                router.push(
+                  `/companies/${router.query.id}?page=${slugify(
+                    page.page_name,
+                  )}`,
+                  undefined,
+                  {
+                    shallow: true,
+                    scroll: false,
+                  },
+                );
+              }}
+            />
           </article>
         ))}
       </section>
@@ -238,14 +248,40 @@ const Company: NextPage = () => {
 
 export default Company;
 
-export const getServerSideProps: GetServerSideProps = async ({params}) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  params,
+  preview,
+}) => {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(['company', params?.id], () =>
     getCompany(params?.id),
   );
+  const previewData = await axios
+    .get(
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/companies/?${
+        preview ? 'publicationState=preview' : ''
+      }&filters[slug][$eq]=${params?.id}`,
+    )
+    .then(res => res.data);
+
+  if (previewData.data.length === 0) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
+      previewData,
+      preview: preview ? true : null,
     },
   };
 };
+
+async function exitPreviewMode() {
+  const response = await axios.get('/api/exit-preview');
+  if (response) {
+    window.location.reload();
+  }
+}
