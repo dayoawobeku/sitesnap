@@ -14,6 +14,8 @@ const Homepage: NextPage = () => {
   useEffect(() => {
     if (router.query.page) {
       setCurrentPage(parseInt(router.query.page as string));
+    } else {
+      setCurrentPage(0);
     }
   }, [router.query.page]);
 
