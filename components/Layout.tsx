@@ -6,7 +6,7 @@ import {useRouter} from 'next/router';
 import Fuse from 'fuse.js';
 const _debounce = require('lodash.debounce');
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
-import {hamburger, search} from '../assets/images/images';
+import {closeNav, hamburger, search} from '../assets/images/images';
 import Modal from './Modal';
 import {getCompanies} from '../queryfns/getCompanies';
 import {getWebpages} from '../queryfns/getWebpages';
@@ -73,6 +73,7 @@ const options: Fuse.IFuseOptions<Options> = {
 export default function Layout({children}: LayoutProps) {
   const {pathname} = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [isNavOpen, setIsNavOpen] = useState(false);
   const [OS, setOS] = useState('');
 
   const {data: companies} = useQuery(['companies'], getCompanies);
@@ -222,14 +223,17 @@ export default function Layout({children}: LayoutProps) {
             <Link href="/">
               <a className="text-md font-medium text-blue">sitesnap.design</a>
             </Link>
-            <div className="h-[31px] w-[31px] lg:hidden">
+            <button
+              className="h-[31px] w-[31px] lg:hidden"
+              onClick={() => setIsNavOpen(true)}
+            >
               <Image
                 src={hamburger}
                 alt="hamburger menu"
                 width={31}
                 height={31}
               />
-            </div>
+            </button>
             <ul className="nav-ul hidden items-center gap-2 font-medium md:mr-2 lg:mr-4 lg:flex lg:gap-4">
               <li className={`${companyTab} whitespace-nowrap`}>
                 <Link href="/companies">
@@ -412,6 +416,57 @@ export default function Layout({children}: LayoutProps) {
               </div>
             ) : null}
           </Modal>
+          <Modal
+            className="rounded-b-lg bg-white px-4 pb-8"
+            isOpen={isNavOpen}
+            onClose={() => {
+              setIsNavOpen(false);
+            }}
+            transitionParentClassName="pt-0 -mx-4"
+            navAnimation
+          >
+            <div className="flex w-full flex-col items-center justify-between gap-4 pt-6">
+              <div className="flex w-full items-center justify-between">
+                <Link href="/">
+                  <a className="text-md font-medium text-blue">
+                    sitesnap.design
+                  </a>
+                </Link>
+                <button
+                  className="h-[31px] w-[31px] lg:hidden"
+                  onClick={() => setIsNavOpen(false)}
+                >
+                  <Image
+                    src={closeNav}
+                    alt="hamburger menu"
+                    width={31}
+                    height={31}
+                  />
+                </button>
+              </div>
+              <ul className="nav-ul flex w-full flex-col items-start gap-2 font-medium">
+                <li className={`${companyTab} whitespace-nowrap`}>
+                  <Link href="/companies">
+                    <a>Companies ({companies?.data.length ?? '-'})</a>
+                  </Link>
+                </li>
+                <li className={`${industryTab} whitespace-nowrap`}>
+                  <Link href="/industries">
+                    <a>
+                      Industries (
+                      {industryCount ? Object.keys(industryCount).length : '-'})
+                    </a>
+                  </Link>
+                </li>
+                <li className={`${webpagesTab} whitespace-nowrap`}>
+                  <Link href="/webpages">
+                    <a>Webpages ({pageCount ?? '-'})</a>
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </Modal>
+
           <button
             onClick={() => {
               setIsOpen(true);
@@ -433,7 +488,7 @@ export default function Layout({children}: LayoutProps) {
       <main>{children}</main>
 
       <footer className="py-6 md:px-5">
-        <p className="-mx-2 text-center text-[0.75rem] text-body md:mt-8 md:text-base">
+        <p className="-mx-2 text-center text-[0.75rem] text-body md:text-base">
           All product and company names are trademarks™ or registered®
           trademarks (including logos, screenshots and icons) remain the
           property of their respective owners.
