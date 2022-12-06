@@ -13,9 +13,6 @@ module.exports = {
       transitionProperty: {
         outlineOffset: 'outline-offset',
       },
-      gridTemplateColumns: {
-        card: 'repeat(auto-fit, minmax(300px, 1fr))',
-      },
     },
     colors: {
       body: '#53504B',

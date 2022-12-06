@@ -34,7 +34,46 @@ html {
     @apply hover:text-blue;
   }
 
+  .nav-ul a {
+    @apply flex py-[6px] lg:inline-block lg:py-0;
+  }
+
   .card {
     @apply grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2 lg:gap-x-12;
   }
+
+  /* pagination */
+
+  .pagination {
+    @apply flex items-center justify-center gap-x-2;
+  }
+
+  .pagination li:not(:last-child, :first-child) {
+    @apply flex h-8 w-8 items-center justify-center rounded bg-white-200 text-sm font-medium text-body hover:bg-opacity-90;
+  }
+
+  .pagination li:not(:last-child, :first-child) a {
+    @apply flex h-full w-full items-center justify-center;
+  }
+
+  .pagination li.pagination__link--active {
+    @apply bg-blue text-white-200;
+  }
+
+  .pagination li.pagination__link--disabled,
+  .pagination li.pagination__link--disabled a {
+    @apply cursor-not-allowed bg-white-200 text-[#b3b3b3];
+  }
+
+  .pagination__link--prev,
+  .pagination__link--next {
+    @apply flex h-full items-center justify-center;
+  }
+
+  .previous,
+  .next {
+    @apply flex h-8 items-center justify-center rounded bg-white-200 px-2 text-sm font-medium text-blue;
+  }
+
+  /* end pagination */
 }
