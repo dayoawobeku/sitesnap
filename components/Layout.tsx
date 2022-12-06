@@ -447,12 +447,22 @@ export default function Layout({children}: LayoutProps) {
               <ul className="nav-ul flex w-full flex-col items-start gap-2 font-medium">
                 <li className={`${companyTab} whitespace-nowrap`}>
                   <Link href="/companies">
-                    <a>Companies ({companies?.data.length ?? '-'})</a>
+                    <a
+                      onClick={() => {
+                        setIsNavOpen(false);
+                      }}
+                    >
+                      Companies ({companies?.data.length ?? '-'})
+                    </a>
                   </Link>
                 </li>
                 <li className={`${industryTab} whitespace-nowrap`}>
                   <Link href="/industries">
-                    <a>
+                    <a
+                      onClick={() => {
+                        setIsNavOpen(false);
+                      }}
+                    >
                       Industries (
                       {industryCount ? Object.keys(industryCount).length : '-'})
                     </a>
@@ -460,7 +470,13 @@ export default function Layout({children}: LayoutProps) {
                 </li>
                 <li className={`${webpagesTab} whitespace-nowrap`}>
                   <Link href="/webpages">
-                    <a>Webpages ({pageCount ?? '-'})</a>
+                    <a
+                      onClick={() => {
+                        setIsNavOpen(false);
+                      }}
+                    >
+                      Webpages ({pageCount ?? '-'})
+                    </a>
                   </Link>
                 </li>
               </ul>
