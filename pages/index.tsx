@@ -10,10 +10,15 @@ import ReactPaginate from 'react-paginate';
 const Homepage: NextPage = () => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(0);
+  console.log(currentPage);
+
+  console.log(router.query.page);
 
   useEffect(() => {
     if (router.query.page) {
       setCurrentPage(parseInt(router.query.page as string));
+    } else {
+      setCurrentPage(0);
     }
   }, [router.query.page]);
 
