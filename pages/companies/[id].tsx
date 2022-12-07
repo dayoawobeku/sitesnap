@@ -166,6 +166,7 @@ const Company: NextPage<{
 
       <Modal
         className="h-full max-w-[1199px] bg-white"
+        transitionParentClassName="p-4"
         isOpen={isOpen}
         onClose={() => {
           setIsOpen(false);
@@ -205,7 +206,7 @@ const Company: NextPage<{
             </button>
           </div>
         </div>
-        <div className="relative h-full w-full">
+        <div className="full-width-img relative h-full w-full">
           {activePage ? (
             <Image
               alt={activePage?.page_name}

@@ -21,6 +21,7 @@ export default function Card({src, onClick, image_data, alt}: Props) {
             height={411}
             layout="responsive"
             objectFit="cover"
+            objectPosition="top"
             placeholder="blur"
             blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII="
             className="cursor-pointer rounded-2xl"
