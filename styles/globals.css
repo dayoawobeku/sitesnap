@@ -77,3 +77,14 @@ html {
 
   /* end pagination */
 }
+
+.full-width-img span {
+  overflow: auto !important;
+}
+
+.full-width-img img {
+  margin: 0 !important;
+  width: 100% !important;
+  height: auto !important;
+  max-height: max-content !important;
+}

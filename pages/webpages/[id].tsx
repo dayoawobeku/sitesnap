@@ -124,6 +124,7 @@ const IndividualWebpages: NextPage = () => {
 
       <Modal
         className="h-full max-w-[1199px] bg-white"
+        transitionParentClassName="p-4"
         isOpen={isOpen}
         onClose={() => {
           setIsOpen(false);
@@ -133,7 +134,7 @@ const IndividualWebpages: NextPage = () => {
           });
         }}
       >
-        <div className="flex items-center justify-between px-12 py-8">
+        <div className="flex flex-wrap items-center justify-center gap-3 p-4 sm:flex-nowrap sm:justify-between sm:gap-0 sm:py-8 sm:px-12">
           <p className="font-medium text-body">
             {specificPages?.[0]?.page_name}
           </p>
@@ -162,13 +163,14 @@ const IndividualWebpages: NextPage = () => {
             </button>
           </div>
         </div>
-        <div className="relative h-full w-full">
+        <div className="full-width-img relative h-full w-full">
           {activePage ? (
             <Image
               alt={activePage?.page_name}
               src={activePage?.image_url}
               layout="fill"
-              objectFit="contain"
+              objectFit="cover"
+              objectPosition="top"
             />
           ) : null}
         </div>
