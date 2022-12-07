@@ -176,7 +176,7 @@ const Company: NextPage<{
           });
         }}
       >
-        <div className="flex items-center justify-between px-12 py-8">
+        <div className="flex flex-wrap items-center justify-center gap-3 p-4 sm:flex-nowrap sm:justify-between sm:gap-0 sm:py-8 sm:px-12">
           <p className="font-medium text-body">
             {company?.data[0]?.attributes?.name ||
               previewData?.data[0]?.attributes?.name}
