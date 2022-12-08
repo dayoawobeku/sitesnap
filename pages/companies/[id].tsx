@@ -21,6 +21,7 @@ interface Page {
   page_url: string;
   image_url: StaticImageData;
   company_name: string;
+  page_id: string;
 }
 
 interface PreviewData {
@@ -50,12 +51,16 @@ const Company: NextPage<{
 
   // get the page that is currently active
   const activePage = pagesArray?.find(
-    (page: Page) => slugify(page.page_name) === router.query.page,
+    (page: Page) =>
+      slugify(page.page_name) === router.query.page &&
+      page.page_id === router.query.page_id,
   );
 
   // get the index of the active page
   const activePageIndex = pagesArray?.findIndex(
-    (page: Page) => page.page_name === activePage?.page_name,
+    (page: Page) =>
+      slugify(page.page_name) === router.query.page &&
+      page.page_id === router.query.page_id,
   );
 
   // get the next page
@@ -65,9 +70,14 @@ const Company: NextPage<{
         (page: Page, index: number) => index === 0,
       );
       const firstPageName = slugify(firstPage?.page_name);
-
       router.push(
-        `/companies/${router.query.id}?page=${firstPageName}`,
+        {
+          pathname: `/companies/${router.query.id}`,
+          query: {
+            page: firstPageName,
+            page_id: firstPage?.page_id,
+          },
+        },
         undefined,
         {
           shallow: true,
@@ -81,7 +91,13 @@ const Company: NextPage<{
       );
       const nextPageName = slugify(nextPage?.page_name);
       router.push(
-        `/companies/${router.query.id}?page=${nextPageName}`,
+        {
+          pathname: `/companies/${router.query.id}`,
+          query: {
+            page: nextPageName,
+            page_id: nextPage?.page_id,
+          },
+        },
         undefined,
         {
           shallow: true,
@@ -100,7 +116,13 @@ const Company: NextPage<{
       );
       const lastPageName = slugify(lastPage?.page_name);
       router.push(
-        `/companies/${router.query.id}?page=${lastPageName}`,
+        {
+          pathname: `/companies/${router.query.id}`,
+          query: {
+            page: lastPageName,
+            page_id: lastPage?.page_id,
+          },
+        },
         undefined,
         {
           shallow: true,
@@ -114,7 +136,13 @@ const Company: NextPage<{
       );
       const prevPageName = slugify(prevPage?.page_name);
       router.push(
-        `/companies/${router.query.id}?page=${prevPageName}`,
+        {
+          pathname: `/companies/${router.query.id}`,
+          query: {
+            page: prevPageName,
+            page_id: prevPage?.page_id,
+          },
+        },
         undefined,
         {
           shallow: true,
@@ -229,9 +257,13 @@ const Company: NextPage<{
               onClick={() => {
                 setIsOpen(true);
                 router.push(
-                  `/companies/${router.query.id}?page=${slugify(
-                    page.page_name,
-                  )}`,
+                  {
+                    pathname: `/companies/${router.query.id}`,
+                    query: {
+                      page: slugify(page.page_name),
+                      page_id: page.page_id,
+                    },
+                  },
                   undefined,
                   {
                     shallow: true,

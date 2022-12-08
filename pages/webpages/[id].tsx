@@ -17,6 +17,7 @@ interface Pages {
     name: string;
   };
   company_name: string;
+  page_id: string;
   image_url: StaticImageData;
 }
 
@@ -37,12 +38,16 @@ const IndividualWebpages: NextPage = () => {
 
   // get the company that is currently active
   const activePage = specificPages?.find(
-    (page: Pages) => slugify(page.company_name) === router.query.company,
+    (page: Pages) =>
+      slugify(page.company_name) === router.query.company &&
+      page.page_id === router.query.page_id,
   );
 
   // get the index of the active company
   const activePageIndex = specificPages?.findIndex(
-    (page: Pages) => page.company_name === activePage?.company_name,
+    (page: Pages) =>
+      slugify(page.company_name) === router.query.company &&
+      page.page_id === router.query.page_id,
   );
 
   // get the next company
@@ -54,12 +59,15 @@ const IndividualWebpages: NextPage = () => {
       const firstCompanyName = slugify(firstCompany?.company_name);
 
       router.push(
-        `/webpages/${router.query.id}?company=${firstCompanyName}`,
-        undefined,
         {
-          shallow: true,
-          scroll: false,
+          pathname: `/webpages/${router.query.id}`,
+          query: {
+            company: firstCompanyName,
+            page_id: firstCompany?.page_id,
+          },
         },
+        undefined,
+        {shallow: true, scroll: false},
       );
       return;
     } else {
@@ -68,12 +76,15 @@ const IndividualWebpages: NextPage = () => {
       );
       const nextCompanyName = slugify(nextCompany?.company_name);
       router.push(
-        `/webpages/${router.query.id}?company=${nextCompanyName}`,
-        undefined,
         {
-          shallow: true,
-          scroll: false,
+          pathname: `/webpages/${router.query.id}`,
+          query: {
+            company: nextCompanyName,
+            page_id: nextCompany?.page_id,
+          },
         },
+        undefined,
+        {shallow: true, scroll: false},
       );
       return nextCompany;
     }
@@ -87,12 +98,15 @@ const IndividualWebpages: NextPage = () => {
       );
       const lastCompanyName = slugify(lastCompany?.company_name);
       router.push(
-        `/webpages/${router.query.id}?company=${lastCompanyName}`,
-        undefined,
         {
-          shallow: true,
-          scroll: false,
+          pathname: `/webpages/${router.query.id}`,
+          query: {
+            company: lastCompanyName,
+            page_id: lastCompany?.page_id,
+          },
         },
+        undefined,
+        {shallow: true, scroll: false},
       );
       return;
     } else {
@@ -101,12 +115,15 @@ const IndividualWebpages: NextPage = () => {
       );
       const prevCompanyName = slugify(prevCompany?.company_name);
       router.push(
-        `/webpages/${router.query.id}?company=${prevCompanyName}`,
-        undefined,
         {
-          shallow: true,
-          scroll: false,
+          pathname: `/webpages/${router.query.id}`,
+          query: {
+            company: prevCompanyName,
+            page_id: prevCompany?.page_id,
+          },
         },
+        undefined,
+        {shallow: true, scroll: false},
       );
       return prevCompany;
     }
@@ -190,14 +207,15 @@ const IndividualWebpages: NextPage = () => {
                 onClick={() => {
                   setIsOpen(true);
                   router.push(
-                    `/webpages/${router.query.id}?company=${slugify(
-                      page.company_name,
-                    )}`,
-                    undefined,
                     {
-                      shallow: true,
-                      scroll: false,
+                      pathname: `/webpages/${router.query.id}`,
+                      query: {
+                        company: slugify(page.company_name),
+                        page_id: page.page_id,
+                      },
                     },
+                    undefined,
+                    {shallow: true, scroll: false},
                   );
                 }}
               />
