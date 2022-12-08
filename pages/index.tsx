@@ -31,7 +31,7 @@ const Homepage: NextPage = () => {
   }
 
   // pagination
-  const PER_PAGE = 2;
+  const PER_PAGE = 8;
   const offset = currentPage * PER_PAGE;
   const currentPageData = companies?.data
     .slice(offset, offset + PER_PAGE)
