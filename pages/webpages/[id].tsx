@@ -1,6 +1,6 @@
 import type {NextPage} from 'next';
 import Head from 'next/head';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useRouter} from 'next/router';
 import Image, {StaticImageData} from 'next/image';
 import {useQuery} from '@tanstack/react-query';
@@ -146,6 +146,17 @@ const IndividualWebpages: NextPage = () => {
     }
   }, [router.query.company, router.query.page_id]);
 
+  // when the user switches pages, scroll to the top of the page
+  const pageRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (router.query.company && router.query.page_id && pageRef.current) {
+      pageRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    }
+  }, [router.query.company, router.query.page_id]);
+
   return (
     <>
       <Head>
@@ -198,7 +209,7 @@ const IndividualWebpages: NextPage = () => {
             </button>
           </div>
         </div>
-        <div className="full-width-img relative h-full w-full">
+        <div ref={pageRef} className="full-width-img relative h-full w-full">
           {activePage ? (
             <Image
               alt={activePage?.page_name}

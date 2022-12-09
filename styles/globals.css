@@ -78,8 +78,12 @@ html {
   /* end pagination */
 }
 
+.full-width-img {
+  overflow: auto;
+}
+
 .full-width-img span {
-  overflow: auto !important;
+  overflow: unset !important;
   /* position: unset !important; */
 }
 
