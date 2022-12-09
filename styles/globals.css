@@ -80,6 +80,7 @@ html {
 
 .full-width-img span {
   overflow: auto !important;
+  /* position: unset !important; */
 }
 
 .full-width-img img {
@@ -87,4 +88,7 @@ html {
   width: 100% !important;
   height: auto !important;
   max-height: max-content !important;
+  /* min-width: auto !important; */
+  /* max-width: 100% !important; */
+  min-height: auto !important;
 }

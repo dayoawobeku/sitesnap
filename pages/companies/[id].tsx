@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import type {GetServerSideProps, NextPage} from 'next';
 import Head from 'next/head';
 import {useRouter} from 'next/router';
@@ -153,6 +153,23 @@ const Company: NextPage<{
     }
   }
 
+  // get the next page on keydown
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === 'ArrowRight') {
+      getNextPage();
+    }
+    if (e.key === 'ArrowLeft') {
+      getPrevPage();
+    }
+  }
+
+  // persist the page state (url) on refresh
+  useEffect(() => {
+    if (router.query.page && router.query.page_id) {
+      setIsOpen(true);
+    }
+  }, [router.query.page, router.query.page_id]);
+
   return (
     <>
       <Head>
@@ -203,8 +220,9 @@ const Company: NextPage<{
             scroll: false,
           });
         }}
+        onKeyDown={handleKeyDown}
       >
-        <div className="flex flex-wrap items-center justify-center gap-3 p-4 sm:flex-nowrap sm:justify-between sm:gap-0 sm:py-8 sm:px-12">
+        <div className="flex flex-wrap items-center justify-center gap-3 bg-white p-4 sm:flex-nowrap sm:justify-between sm:gap-0 sm:py-8 sm:px-12">
           <p className="font-medium text-body">
             {company?.data[0]?.attributes?.name ||
               previewData?.data[0]?.attributes?.name}
@@ -241,6 +259,8 @@ const Company: NextPage<{
               src={activePage?.image_url}
               layout="fill"
               objectFit="contain"
+              objectPosition="top"
+              tabIndex={0}
             />
           ) : null}
         </div>

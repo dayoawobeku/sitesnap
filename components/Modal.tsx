@@ -18,6 +18,7 @@ interface ModalProps {
   padding?: string;
   transitionParentClassName?: string;
   navAnimation?: boolean;
+  onKeyDown?: (event: React.KeyboardEvent) => void;
 }
 
 export default function Modal({
@@ -27,6 +28,7 @@ export default function Modal({
   onClose,
   transitionParentClassName,
   navAnimation,
+  onKeyDown,
 }: ModalProps) {
   return (
     <>
@@ -45,7 +47,7 @@ export default function Modal({
           </Transition.Child>
           <div className="fixed inset-0 overflow-y-auto">
             <TransitionParent
-              className={`flex h-full min-h-screen items-start justify-center px-4 text-center backdrop-blur-sm ${
+              className={`flex h-full items-start justify-center px-4 text-center backdrop-blur-sm ${
                 transitionParentClassName
                   ? transitionParentClassName
                   : 'pt-20 md:p-[12vh]'
@@ -69,6 +71,7 @@ export default function Modal({
                 }`}
               >
                 <Dialog.Panel
+                  onKeyDown={onKeyDown}
                   className={`${className} flex w-full transform flex-col text-left align-middle transition-all`}
                 >
                   {children}
