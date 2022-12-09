@@ -1,6 +1,6 @@
 import type {NextPage} from 'next';
 import Head from 'next/head';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useRouter} from 'next/router';
 import Image, {StaticImageData} from 'next/image';
 import {useQuery} from '@tanstack/react-query';
@@ -129,6 +129,23 @@ const IndividualWebpages: NextPage = () => {
     }
   }
 
+  // get the next page on keydown
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === 'ArrowRight') {
+      getNextCompany();
+    }
+    if (e.key === 'ArrowLeft') {
+      getPrevCompany();
+    }
+  }
+
+  // persist the page state (url) on refresh
+  useEffect(() => {
+    if (router.query.company && router.query.page_id) {
+      setIsOpen(true);
+    }
+  }, [router.query.company, router.query.page_id]);
+
   return (
     <>
       <Head>
@@ -150,6 +167,7 @@ const IndividualWebpages: NextPage = () => {
             scroll: false,
           });
         }}
+        onKeyDown={handleKeyDown}
       >
         <div className="flex flex-wrap items-center justify-center gap-3 p-4 sm:flex-nowrap sm:justify-between sm:gap-0 sm:py-8 sm:px-12">
           <p className="font-medium text-body">
@@ -188,6 +206,7 @@ const IndividualWebpages: NextPage = () => {
               layout="fill"
               objectFit="cover"
               objectPosition="top"
+              tabIndex={0}
             />
           ) : null}
         </div>

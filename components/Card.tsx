@@ -24,7 +24,7 @@ export default function Card({src, onClick, image_data, alt}: Props) {
             objectPosition="top"
             placeholder="blur"
             blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII="
-            className="cursor-pointer rounded-2xl"
+            className="cursor-pointer rounded lg:rounded-2xl"
             onClick={onClick}
           />
         </div>
