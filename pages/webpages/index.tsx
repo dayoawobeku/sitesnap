@@ -4,6 +4,7 @@ import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import PagesCard from '../../components/PagesCard';
 import {getWebpages} from '../../queryfns/getWebpages';
 import {HeadingOne} from '../../components';
+import {useEffect, useState} from 'react';
 
 interface Pages {
   page_name: string;
@@ -14,18 +15,19 @@ interface Pages {
 
 const Webpages: NextPage = () => {
   const {data} = useQuery(['webpages'], getWebpages);
+  const [uniquePages, setUniquePages] = useState([]);
 
-  const pagesArray = data?.data?.map((page: Pages) => page.attributes.pages);
-  const flattenedPages = pagesArray?.flat();
-
-  // get the unique pages
-  const uniquePages = flattenedPages?.filter((page: Pages, index: number) => {
-    return (
-      flattenedPages?.findIndex(
-        (p: Pages) => p.page_name === page.page_name,
-      ) === index
-    );
-  });
+  useEffect(() => {
+    const pagesArray = data?.data?.map((page: Pages) => page.attributes.pages);
+    const randomPages = pagesArray?.flat().sort(() => Math.random() - 0.5);
+    const uniquePages = randomPages?.filter((page: Pages, index: number) => {
+      return (
+        randomPages?.findIndex((p: Pages) => p.page_name === page.page_name) ===
+        index
+      );
+    });
+    setUniquePages(uniquePages);
+  }, [data?.data]);
 
   return (
     <>

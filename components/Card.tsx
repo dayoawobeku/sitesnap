@@ -7,13 +7,20 @@ interface Props {
   onClick?: () => void;
   image_data: StaticImageData;
   alt: string;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
 }
 
-export default function Card({src, onClick, image_data, alt}: Props) {
+export default function Card({
+  src,
+  onClick,
+  image_data,
+  alt,
+  onKeyDown,
+}: Props) {
   return (
     <>
       {image_data ? (
-        <div className="relative w-full rounded border-[0.5px] border-body lg:rounded-2xl">
+        <article className="relative w-full rounded border-[0.5px] border-body focus-within:border-blue lg:rounded-2xl">
           <Image
             alt={alt}
             src={src ?? plainCard}
@@ -26,8 +33,10 @@ export default function Card({src, onClick, image_data, alt}: Props) {
             blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII="
             className="cursor-pointer rounded lg:rounded-2xl"
             onClick={onClick}
+            tabIndex={typeof onClick === 'function' ? 0 : -1}
+            onKeyDown={onKeyDown}
           />
-        </div>
+        </article>
       ) : null}
     </>
   );

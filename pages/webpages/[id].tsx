@@ -10,7 +10,7 @@ import Card from '../../components/Card';
 import {HeadingOne, Modal} from '../../components';
 import {closeIc, nextIc, prevIc} from '../../assets/images/images';
 
-interface Pages {
+interface Page {
   page_name: string;
   attributes: {
     pages: string[];
@@ -26,26 +26,24 @@ const IndividualWebpages: NextPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const {data: webpages} = useQuery(['webpages'], getWebpages);
 
-  const pagesArray = webpages?.data?.map(
-    (page: Pages) => page.attributes.pages,
-  );
+  const pagesArray = webpages?.data?.map((page: Page) => page.attributes.pages);
 
   const flattenedPages = pagesArray?.flat();
 
   const specificPages = flattenedPages?.filter(
-    (page: Pages) => slugify(page.page_name) === router.query.id,
+    (page: Page) => slugify(page.page_name) === router.query.id,
   );
 
   // get the company that is currently active
   const activePage = specificPages?.find(
-    (page: Pages) =>
+    (page: Page) =>
       slugify(page.company_name) === router.query.company &&
       page.page_id === router.query.page_id,
   );
 
   // get the index of the active company
   const activePageIndex = specificPages?.findIndex(
-    (page: Pages) =>
+    (page: Page) =>
       slugify(page.company_name) === router.query.company &&
       page.page_id === router.query.page_id,
   );
@@ -54,7 +52,7 @@ const IndividualWebpages: NextPage = () => {
   function getNextCompany() {
     if (activePageIndex === specificPages?.length - 1) {
       const firstCompany = specificPages?.find(
-        (page: Pages, index: number) => index === 0,
+        (page: Page, index: number) => index === 0,
       );
       const firstCompanyName = slugify(firstCompany?.company_name);
 
@@ -72,7 +70,7 @@ const IndividualWebpages: NextPage = () => {
       return;
     } else {
       const nextCompany = specificPages?.find(
-        (page: Pages, index: number) => index === activePageIndex + 1,
+        (page: Page, index: number) => index === activePageIndex + 1,
       );
       const nextCompanyName = slugify(nextCompany?.company_name);
       router.push(
@@ -94,7 +92,7 @@ const IndividualWebpages: NextPage = () => {
   function getPrevCompany() {
     if (activePageIndex === 0) {
       const lastCompany = specificPages?.find(
-        (page: Pages, index: number) => index === specificPages?.length - 1,
+        (page: Page, index: number) => index === specificPages?.length - 1,
       );
       const lastCompanyName = slugify(lastCompany?.company_name);
       router.push(
@@ -111,7 +109,7 @@ const IndividualWebpages: NextPage = () => {
       return;
     } else {
       const prevCompany = specificPages?.find(
-        (page: Pages, index: number) => index === activePageIndex - 1,
+        (page: Page, index: number) => index === activePageIndex - 1,
       );
       const prevCompanyName = slugify(prevCompany?.company_name);
       router.push(
@@ -156,6 +154,21 @@ const IndividualWebpages: NextPage = () => {
       });
     }
   }, [router.query.company, router.query.page_id]);
+
+  function openModal(page: Page) {
+    setIsOpen(true);
+    router.push(
+      {
+        pathname: `/webpages/${router.query.id}`,
+        query: {
+          company: slugify(page.company_name),
+          page_id: page.page_id,
+        },
+      },
+      undefined,
+      {shallow: true, scroll: false},
+    );
+  }
 
   return (
     <>
@@ -225,7 +238,7 @@ const IndividualWebpages: NextPage = () => {
 
       <section>
         <div className="card lg:px-3">
-          {specificPages?.map((page: Pages, index: number) => (
+          {specificPages?.map((page: Page, index: number) => (
             <article key={index} className="flex flex-col gap-5 py-0 lg:py-14">
               <h2 className="text-md font-medium text-grey">
                 {page.company_name}
@@ -234,19 +247,11 @@ const IndividualWebpages: NextPage = () => {
                 src={page.image_url}
                 alt={page.company_name}
                 image_data={page.image_url}
-                onClick={() => {
-                  setIsOpen(true);
-                  router.push(
-                    {
-                      pathname: `/webpages/${router.query.id}`,
-                      query: {
-                        company: slugify(page.company_name),
-                        page_id: page.page_id,
-                      },
-                    },
-                    undefined,
-                    {shallow: true, scroll: false},
-                  );
+                onClick={() => openModal(page)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') {
+                    openModal(page);
+                  }
                 }}
               />
             </article>
