@@ -181,6 +181,24 @@ const Company: NextPage<{
     }
   }, [router.query.page, router.query.page_id]);
 
+  function openModal(page: Page) {
+    setIsOpen(true);
+    router.push(
+      {
+        pathname: `/companies/${router.query.id}`,
+        query: {
+          page: slugify(page.page_name),
+          page_id: page.page_id,
+        },
+      },
+      undefined,
+      {
+        shallow: true,
+        scroll: false,
+      },
+    );
+  }
+
   return (
     <>
       <Head>
@@ -213,7 +231,7 @@ const Company: NextPage<{
           }
           target="_blank"
           rel="noreferrer"
-          className="flex items-center gap-2 rounded-lg bg-white-200 p-4 font-medium outline outline-1 outline-body transition-all hover:bg-white"
+          className="flex items-center gap-2 rounded-lg bg-white-200 p-4 font-medium outline outline-1 outline-body transition-all hover:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue"
         >
           <Image alt="" src={hyperlink} width={20} height={20} />
           visit website
@@ -283,24 +301,13 @@ const Company: NextPage<{
             <h2 className="text-md font-medium text-grey">{page?.page_name}</h2>
             <Card
               src={page?.image_url}
-              alt={page?.company_name + ' ' + page?.page_name}
+              alt={`${page?.company_name}-${page?.page_name}`}
               image_data={page?.image_url}
-              onClick={() => {
-                setIsOpen(true);
-                router.push(
-                  {
-                    pathname: `/companies/${router.query.id}`,
-                    query: {
-                      page: slugify(page.page_name),
-                      page_id: page.page_id,
-                    },
-                  },
-                  undefined,
-                  {
-                    shallow: true,
-                    scroll: false,
-                  },
-                );
+              onClick={() => openModal(page)}
+              onKeyDown={e => {
+                if (e.key === 'Enter') {
+                  openModal(page);
+                }
               }}
             />
           </article>
