@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import type {GetServerSideProps, NextPage} from 'next';
 import Head from 'next/head';
 import {useRouter} from 'next/router';
@@ -170,6 +170,17 @@ const Company: NextPage<{
     }
   }, [router.query.page, router.query.page_id]);
 
+  // when the user switches pages, scroll to the top of the page
+  const pageRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (router.query.page && router.query.page_id && pageRef.current) {
+      pageRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    }
+  }, [router.query.page, router.query.page_id]);
+
   return (
     <>
       <Head>
@@ -252,7 +263,7 @@ const Company: NextPage<{
             </button>
           </div>
         </div>
-        <div className="full-width-img relative h-full w-full">
+        <div ref={pageRef} className="full-width-img relative h-full w-full">
           {activePage ? (
             <Image
               alt={activePage?.page_name}
