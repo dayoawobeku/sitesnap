@@ -19,8 +19,23 @@ const Webpages: NextPage = () => {
 
   useEffect(() => {
     const pagesArray = data?.data?.map((page: Pages) => page.attributes.pages);
-    const randomPages = pagesArray?.flat().sort(() => Math.random() - 0.5);
-    const uniquePages = randomPages?.filter((page: Pages, index: number) => {
+    const flattenedPages = pagesArray?.flat();
+    const randomPages = flattenedPages.sort(() => Math.random() - 0.5);
+
+    // sort the random pages according to the page name
+    const sortedPages = randomPages.sort(
+      (a: {page_name: number}, b: {page_name: number}) => {
+        if (a.page_name < b.page_name) {
+          return -1;
+        }
+        if (a.page_name > b.page_name) {
+          return 1;
+        }
+        return 0;
+      },
+    );
+
+    const uniquePages = sortedPages?.filter((page: Pages, index: number) => {
       return (
         randomPages?.findIndex((p: Pages) => p.page_name === page.page_name) ===
         index

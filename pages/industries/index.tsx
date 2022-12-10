@@ -31,22 +31,29 @@ const Industries: NextPage = () => {
   useEffect(() => {
     const randomCompanies = companies?.data?.sort(() => Math.random() - 0.5);
 
-    const uniqueIndustries = [
-      ...new Set(
-        randomCompanies?.map((company: Company) => company.attributes.industry),
-      ),
-    ];
-
-    // first set of company that has those industries
-    const firstCompanies = uniqueIndustries.map(industry => {
-      const firstCompany = companies?.data?.find(
-        (company: Company) => company.attributes.industry === industry,
-      );
-
-      return firstCompany;
+    // sort the random companies according to the industry name
+    const sortedCompanies = randomCompanies.sort((a: Company, b: Company) => {
+      if (a?.attributes?.industry < b?.attributes?.industry) {
+        return -1;
+      }
+      if (a?.attributes?.industry > b?.attributes?.industry) {
+        return 1;
+      }
+      return 0;
     });
 
-    setFirstCompanies(firstCompanies);
+    const uniqueCompanies = sortedCompanies?.filter(
+      (company: Company, index: number, self: Company[]) => {
+        return (
+          index ===
+          self.findIndex(
+            t => t?.attributes?.industry === company?.attributes?.industry,
+          )
+        );
+      },
+    );
+
+    setFirstCompanies(uniqueCompanies);
   }, [companies]);
 
   // randomize the companies
