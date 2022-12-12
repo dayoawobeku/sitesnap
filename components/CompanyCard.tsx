@@ -9,7 +9,7 @@ interface CompanyCardProps {
     name: string;
     pages: [
       {
-        image_url: StaticImageData;
+        thumbnail_url: StaticImageData;
       },
     ];
     description: string;
@@ -35,9 +35,9 @@ export default function CompanyCard({companies}: allCompanies) {
               {attributes.name}
             </h2>
             <Card
-              src={attributes.pages[0]?.image_url}
+              src={attributes.pages[0]?.thumbnail_url}
               alt=""
-              image_data={attributes.pages[0]?.image_url}
+              image_data={attributes.pages[0]?.thumbnail_url}
             />
             <p className="text-body">{attributes.description}</p>
           </a>

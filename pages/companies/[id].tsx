@@ -4,7 +4,7 @@ import Head from 'next/head';
 import {useRouter} from 'next/router';
 import Image, {StaticImageData} from 'next/image';
 import {closeIc, hyperlink, nextIc, prevIc} from '../../assets/images/images';
-import {slugify} from '../../helpers';
+import {ogImage, slugify, url} from '../../helpers';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {getCompany} from '../../queryfns';
 import {Card, Modal} from '../../components';
@@ -20,6 +20,7 @@ interface Page {
   page_name: string;
   page_url: string;
   image_url: StaticImageData;
+  thumbnail_url: StaticImageData;
   company_name: string;
   page_id: string;
 }
@@ -49,7 +50,7 @@ const Company: NextPage<{
     company?.data[0]?.attributes?.pages ||
     previewData?.data[0]?.attributes?.pages;
 
-  // get the page that is currently active
+  // get active page
   const activePage = pagesArray?.find(
     (page: Page) =>
       slugify(page.page_name) === router.query.page &&
@@ -167,6 +168,8 @@ const Company: NextPage<{
   useEffect(() => {
     if (router.query.page && router.query.page_id) {
       setIsOpen(true);
+    } else {
+      setIsOpen(false);
     }
   }, [router.query.page, router.query.page_id]);
 
@@ -199,10 +202,52 @@ const Company: NextPage<{
     );
   }
 
+  const metaTitle = company?.data[0]?.attributes?.name.toLowerCase();
+
   return (
     <>
       <Head>
-        <title>Company</title>
+        <title>{metaTitle} - sitesnap.design</title>
+        <meta
+          name="title"
+          property="og:title"
+          content={`${metaTitle} - sitesnap.design`}
+        />
+        <meta
+          name="description"
+          content="Find your favorite sites in one place, then learn from the greats."
+        />
+        <link rel="icon" href="/favicon.ico" />
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:url"
+          content={`${url}/companies/${router.query.id}`}
+        />
+        <meta property="og:title" content={`${metaTitle} - sitesnap.design`} />
+        <meta
+          name="description"
+          property="og:description"
+          content="Find your favorite sites in one place, then learn from the greats."
+        />
+        <meta property="og:site_name" content="sitesnap.design" />
+        <meta name="image" property="og:image" content={ogImage} />
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta
+          property="twitter:url"
+          content={`${url}/companies/${router.query.id}`}
+        />
+        {/* <meta property="twitter:site" content="@sitesnap_design" /> */}
+        <meta
+          property="twitter:title"
+          content={`${metaTitle} - sitesnap.design`}
+        />
+        <meta
+          property="twitter:description"
+          content="Find your favorite sites in one place, then learn from the greats."
+        />
+        <meta property="twitter:image" content={ogImage} />
       </Head>
 
       {preview ? (
@@ -300,9 +345,9 @@ const Company: NextPage<{
           <article key={index} className="flex flex-col gap-5 py-0 lg:py-14">
             <h2 className="text-md font-medium text-grey">{page?.page_name}</h2>
             <Card
-              src={page?.image_url}
+              src={page?.thumbnail_url}
               alt={`${page?.company_name}-${page?.page_name}`}
-              image_data={page?.image_url}
+              image_data={page?.thumbnail_url}
               onClick={() => openModal(page)}
               onKeyDown={e => {
                 if (e.key === 'Enter') {
