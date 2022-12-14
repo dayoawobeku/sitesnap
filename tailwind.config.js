@@ -13,17 +13,20 @@ module.exports = {
       transitionProperty: {
         outlineOffset: 'outline-offset',
       },
-    },
-    colors: {
-      body: '#53504B',
-      grey: '#1D1C1A',
-      blue: '#1746A2',
-      white: {
-        DEFAULT: '#FFF',
-        200: '#F3F2F2',
+      animation: {
+        'pulse-slow': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
-      black: {
-        DEFAULT: '#000',
+      colors: {
+        body: '#53504B',
+        grey: '#1D1C1A',
+        blue: '#1746A2',
+        white: {
+          DEFAULT: '#FFF',
+          200: '#F3F2F2',
+        },
+        black: {
+          DEFAULT: '#000',
+        },
       },
     },
     fontFamily: {

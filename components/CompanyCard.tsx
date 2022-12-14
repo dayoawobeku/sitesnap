@@ -22,6 +22,8 @@ interface allCompanies {
 }
 
 export default function CompanyCard({companies}: allCompanies) {
+  // function to replace the attributes.pages[0]?.thumbnail_url with a blurred image
+
   return (
     <article className="card lg:px-3">
       {companies?.map(({attributes}) => (

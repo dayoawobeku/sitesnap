@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {useRouter} from 'next/router';
-import type {GetStaticProps, NextPage} from 'next';
+import type {GetServerSideProps, NextPage} from 'next';
 import Head from 'next/head';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import ReactPaginate from 'react-paginate';
@@ -117,10 +117,12 @@ const Homepage: NextPage = () => {
 
 export default Homepage;
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async params => {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(['companies', 1], () =>
-    getPaginatedCompanies(1),
+  await queryClient.prefetchQuery(
+    ['companies', params.query.page ? Number(params.query.page) : 1],
+    () =>
+      getPaginatedCompanies(params.query.page ? Number(params.query.page) : 1),
   );
   return {
     props: {
