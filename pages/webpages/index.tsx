@@ -21,17 +21,15 @@ const Webpages: NextPage = () => {
   const randomPages = flattenedPages.sort(() => Math.random() - 0.5);
 
   // sort the random pages alphabetically
-  const sortedPages = randomPages.sort(
-    (a: {page_name: number}, b: {page_name: number}) => {
-      if (a.page_name < b.page_name) {
-        return -1;
-      }
-      if (a.page_name > b.page_name) {
-        return 1;
-      }
-      return 0;
-    },
-  );
+  const sortedPages = randomPages.sort((a: Pages, b: Pages) => {
+    if (a?.page_name < b?.page_name) {
+      return -1;
+    }
+    if (a?.page_name > b?.page_name) {
+      return 1;
+    }
+    return 0;
+  });
 
   const uniquePages = sortedPages?.filter((page: Pages, index: number) => {
     return (

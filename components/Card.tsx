@@ -1,11 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Image, {StaticImageData} from 'next/image';
 import {plainCard} from '../assets/images/images';
 
 interface Props {
-  src: StaticImageData;
+  src: string | StaticImageData;
   onClick?: () => void;
-  image_data: StaticImageData;
+  image_data: string | StaticImageData;
   alt: string;
   onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
 }
@@ -17,6 +17,24 @@ export default function Card({
   alt,
   onKeyDown,
 }: Props) {
+  // function to replace the blurDataURL with a blurred image of the src from cloudinary
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function blurImage(src: any) {
+    if (src) {
+      const blurImage = src.replace(
+        'upload/e_sharpen:100,q_auto,f_auto,w_620,h_411,c_thumb,g_north/',
+        'upload/e_blur:400,q_auto,f_auto,w_620,h_411,c_thumb,g_north/',
+      );
+      return blurImage;
+    }
+  }
+
+  const [isBrowser, setIsBrowser] = React.useState(false);
+
+  useEffect(() => {
+    setIsBrowser(true);
+  }, []);
+
   return (
     <>
       {image_data ? (
@@ -30,7 +48,11 @@ export default function Card({
             objectFit="cover"
             objectPosition="top"
             placeholder="blur"
-            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII="
+            blurDataURL={
+              isBrowser
+                ? blurImage(src)
+                : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII='
+            }
             className="cursor-pointer rounded lg:rounded-2xl"
             onClick={onClick}
             tabIndex={typeof onClick === 'function' ? 0 : -1}
