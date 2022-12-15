@@ -207,7 +207,7 @@ const Company: NextPage<{
   return (
     <>
       <Head>
-        <title>{metaTitle} - sitesnap.design</title>
+        <title>{`${metaTitle} - sitesnap.design`}</title>
         <meta
           name="title"
           property="og:title"

@@ -44,7 +44,7 @@ const IndividualIndustries: NextPage = () => {
   return (
     <>
       <Head>
-        <title>industries ({metaTitle}) - sitesnap.design</title>
+        <title>{`industries (${metaTitle}) - sitesnap.design`}</title>
         <meta
           name="title"
           property="og:title"

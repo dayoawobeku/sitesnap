@@ -1,9 +1,9 @@
-import type {NextPage} from 'next';
+import type {GetStaticPaths, GetStaticProps, NextPage} from 'next';
 import Head from 'next/head';
 import {useEffect, useRef, useState} from 'react';
 import {useRouter} from 'next/router';
 import Image, {StaticImageData} from 'next/image';
-import {useQuery} from '@tanstack/react-query';
+import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {ogImage, slugify, url} from '../../helpers';
 import {getWebpages} from '../../queryfns';
 import Card from '../../components/Card';
@@ -25,7 +25,7 @@ interface Page {
 const IndividualWebpages: NextPage = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const {data: webpages} = useQuery(['webpages'], getWebpages);
+  const {data: webpages} = useQuery(['webpages', router.query.id], getWebpages);
 
   const pagesArray = webpages?.data?.map((page: Page) => page.attributes.pages);
 
@@ -178,7 +178,7 @@ const IndividualWebpages: NextPage = () => {
   return (
     <>
       <Head>
-        <title>webpages ({metaTitle}) - sitesnap.design</title>
+        <title>{`webpages (${metaTitle}) - sitesnap.design`}</title>
         <meta
           name="title"
           property="og:title"
@@ -314,3 +314,41 @@ const IndividualWebpages: NextPage = () => {
 };
 
 export default IndividualWebpages;
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const webpagesData = await getWebpages();
+
+  const pagesArray = webpagesData?.data?.map(
+    (page: Page) => page.attributes.pages,
+  );
+
+  const flattenedPages = pagesArray?.flat();
+
+  const webpages = flattenedPages?.filter((page: Page, index: number) => {
+    return (
+      flattenedPages?.findIndex((p: Page) => p.page_name === page.page_name) ===
+      index
+    );
+  });
+
+  const paths = webpages?.map((page: Page) => ({
+    params: {id: slugify(page.page_name)},
+  }));
+
+  return {
+    paths,
+    fallback: false,
+  };
+};
+
+export const getStaticProps: GetStaticProps = async ({params}) => {
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery(['webpages', params?.id], getWebpages);
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};
