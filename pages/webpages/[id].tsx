@@ -189,6 +189,11 @@ const IndividualWebpages: NextPage = () => {
           content="Find your favorite sites in one place, then learn from the greats."
         />
         <link rel="icon" href="/favicon.ico" />
+        <link
+          rel="canonical"
+          href={`${url}/webpages/${router.query.id}`}
+          key="canonical"
+        />
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta
