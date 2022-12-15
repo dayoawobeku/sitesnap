@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import type {AppProps} from 'next/app';
+import {Analytics} from '@vercel/analytics/react';
 import {
   QueryClientProvider,
   QueryClient,
@@ -33,6 +34,7 @@ function MyApp({Component, pageProps}: AppProps<MyAppProps>) {
         </Layout>
         <ReactQueryDevtools initialIsOpen />
       </Hydrate>
+      <Analytics />
     </QueryClientProvider>
   );
 }
