@@ -5,7 +5,7 @@ import Link from 'next/link';
 import {useRouter} from 'next/router';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {ogImage, slugify, url} from '../../helpers';
-import {getCompanies, getIndustries} from '../../queryfns';
+import {getCompanies, getIndustry} from '../../queryfns';
 import {Card, HeadingOne} from '../../components';
 
 interface Company {
@@ -24,8 +24,8 @@ interface Company {
 const IndividualIndustries: NextPage = () => {
   const router = useRouter();
 
-  const {data: industries} = useQuery(['industries', router.query.id], () =>
-    getIndustries(router.query.id),
+  const {data: industries} = useQuery(['industry', router.query.id], () =>
+    getIndustry(router.query.id),
   );
 
   const industryName = industries?.data?.[0]?.attributes?.industry;
@@ -44,7 +44,7 @@ const IndividualIndustries: NextPage = () => {
   return (
     <>
       <Head>
-        <title>industries ({metaTitle}) - sitesnap.design</title>
+        <title>{`industries (${metaTitle}) - sitesnap.design`}</title>
         <meta
           name="title"
           property="og:title"
@@ -55,6 +55,11 @@ const IndividualIndustries: NextPage = () => {
           content="Find your favorite sites in one place, then learn from the greats."
         />
         <link rel="icon" href="/favicon.ico" />
+        <link
+          rel="canonical"
+          href={`${url}/industries/${router.query.id}`}
+          key="canonical"
+        />
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta
@@ -142,8 +147,8 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({params}: {params: {id: string}}) {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(['industries', params.id], () =>
-    getIndustries(params.id),
+  await queryClient.prefetchQuery(['industry', params.id], () =>
+    getIndustry(params.id),
   );
   return {
     props: {

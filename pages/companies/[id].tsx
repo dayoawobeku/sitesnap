@@ -207,7 +207,7 @@ const Company: NextPage<{
   return (
     <>
       <Head>
-        <title>{metaTitle} - sitesnap.design</title>
+        <title>{`${metaTitle} - sitesnap.design`}</title>
         <meta
           name="title"
           property="og:title"
@@ -218,6 +218,11 @@ const Company: NextPage<{
           content="Find your favorite sites in one place, then learn from the greats."
         />
         <link rel="icon" href="/favicon.ico" />
+        <link
+          rel="canonical"
+          href={`${url}/companies/${router.query.id}`}
+          key="canonical"
+        />
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta

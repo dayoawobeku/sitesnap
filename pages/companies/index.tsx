@@ -1,12 +1,29 @@
-import type {GetStaticProps, NextPage} from 'next';
+import {useState} from 'react';
+import type {GetServerSideProps, NextPage} from 'next';
 import Head from 'next/head';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
-import {getCompanies} from '../../queryfns';
-import {CompanyCard, HeadingOne} from '../../components';
+import {getPaginatedCompanies} from '../../queryfns';
+import {CompanyCard, HeadingOne, Pagination} from '../../components';
 import {ogImage, url} from '../../helpers';
+import {useRouter} from 'next/router';
 
 const Companies: NextPage = () => {
-  const {data: companies} = useQuery(['companies'], getCompanies);
+  const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const {data: companies} = useQuery(
+    ['companies', router.query.page ? Number(router.query.page) : 1],
+    () =>
+      getPaginatedCompanies(router.query.page ? Number(router.query.page) : 1),
+  );
+
+  const PER_PAGE = 8;
+  const offset = currentPage * PER_PAGE;
+  const currentPageData = companies?.data
+    .slice(offset, offset + PER_PAGE)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .map(({text}: any, index: number) => <p key={index}>{text}</p>);
+  const pageCount = Math.ceil(companies?.meta?.pagination?.total / PER_PAGE);
 
   return (
     <>
@@ -49,6 +66,12 @@ const Companies: NextPage = () => {
 
       <section>
         <CompanyCard companies={companies?.data} />
+        <Pagination
+          pageCount={pageCount}
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+          currentPageData={currentPageData}
+        />
       </section>
     </>
   );
@@ -56,9 +79,13 @@ const Companies: NextPage = () => {
 
 export default Companies;
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async params => {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(['companies'], getCompanies);
+  await queryClient.prefetchQuery(
+    ['companies', params.query.page ? Number(params.query.page) : 1],
+    () =>
+      getPaginatedCompanies(params.query.page ? Number(params.query.page) : 1),
+  );
   return {
     props: {
       dehydratedState: dehydrate(queryClient),

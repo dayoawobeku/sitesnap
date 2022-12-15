@@ -1,13 +1,9 @@
 import axios from 'axios';
 
-interface Slug {
-  slug: string | string[] | undefined;
-}
-
-export function getIndustries(slug: Slug['slug']) {
+export function getIndustries() {
   return axios
     .get(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/companies?filters[industry][$eqi]=${slug}&sort=createdAt:DESC`,
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/companies?fields=industry&sort=createdAt:DESC`,
     )
     .then(res => res.data);
 }

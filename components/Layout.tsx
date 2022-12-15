@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {GetStaticProps} from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,10 +8,8 @@ const _debounce = require('lodash.debounce');
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {closeNav, hamburger, search} from '../assets/images/images';
 import Modal from './Modal';
-import {getCompanies} from '../queryfns/getCompanies';
-import {getWebpages} from '../queryfns/getWebpages';
-import {getCategories} from '../queryfns/getCategories';
 import {slugify} from '../helpers';
+import {getIndustries, getCompanies, getWebpages} from '../queryfns';
 
 interface Company {
   title: string;
@@ -78,7 +76,7 @@ export default function Layout({children}: LayoutProps) {
 
   const {data: companies} = useQuery(['companies'], getCompanies);
   const {data: pages} = useQuery(['webpages'], getWebpages);
-  const {data: categories} = useQuery(['categories'], getCategories);
+  const {data: categories} = useQuery(['industries'], getIndustries);
   const industries = categories?.data?.map(
     (category: Category) => category?.attributes?.industry,
   );
@@ -519,7 +517,7 @@ export const getStaticProps: GetStaticProps = async () => {
   await Promise.all([
     queryClient.prefetchQuery(['companies'], getCompanies),
     queryClient.prefetchQuery(['webpages'], getWebpages),
-    queryClient.prefetchQuery(['categories'], getCategories),
+    queryClient.prefetchQuery(['industries'], getIndustries),
   ]);
   return {
     props: {
