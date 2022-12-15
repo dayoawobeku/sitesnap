@@ -6,7 +6,7 @@ import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {getCompanies} from '../../queryfns/getCompanies';
 import {ogImage, slugify, url} from '../../helpers';
 import {Card, HeadingOne} from '../../components';
-import {getCategories} from '../../queryfns';
+import {getIndustries} from '../../queryfns';
 
 interface Company {
   id: string;
@@ -25,7 +25,7 @@ interface Company {
 }
 
 const Industries: NextPage = () => {
-  const {data: industries} = useQuery(['industries'], getCategories);
+  const {data: industries} = useQuery(['industries'], getIndustries);
   const {data: companies} = useQuery(['companies'], getCompanies);
 
   // find the unique industries
@@ -149,7 +149,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const queryClient = new QueryClient();
   await Promise.all([
     queryClient.prefetchQuery(['companies'], getCompanies),
-    queryClient.prefetchQuery(['industries'], getCategories),
+    queryClient.prefetchQuery(['industries'], getIndustries),
   ]);
 
   return {

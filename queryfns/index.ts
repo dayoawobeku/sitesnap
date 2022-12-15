@@ -1,15 +1,15 @@
-import {getCategories} from './getCategories';
-import {getCompanies} from './getCompanies';
-import {getCompany} from './getCompany';
-import {getPaginatedCompanies} from './getPaginatedCompanies';
-import {getWebpages} from './getWebpages';
 import {getIndustries} from './getIndustries';
+import {getCompanies, getPaginatedCompanies} from './getCompanies';
+import {getCompany} from './getCompany';
+import {getWebpages, getPaginatedWebpages} from './getWebpages';
+import {getIndustry} from './getIndustry';
 
 export {
-  getCategories,
-  getCompanies,
-  getCompany,
-  getPaginatedCompanies,
-  getWebpages,
   getIndustries,
+  getCompanies,
+  getPaginatedCompanies,
+  getCompany,
+  getWebpages,
+  getPaginatedWebpages,
+  getIndustry,
 };

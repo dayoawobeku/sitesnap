@@ -1,37 +1,21 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {useRouter} from 'next/router';
 import type {GetServerSideProps, NextPage} from 'next';
 import Head from 'next/head';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
-import ReactPaginate from 'react-paginate';
-import CompanyCard from '../components/CompanyCard';
 import {getPaginatedCompanies} from '../queryfns';
 import {ogImage, url} from '../helpers';
+import {CompanyCard, Pagination} from '../components';
 
 const Homepage: NextPage = () => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(0);
-
-  useEffect(() => {
-    if (router.query.page) {
-      setCurrentPage(parseInt(router.query.page as string));
-    } else {
-      setCurrentPage(0);
-    }
-  }, [router.query.page]);
 
   const {data: companies} = useQuery(
     ['companies', router.query.page ? Number(router.query.page) : 1],
     () =>
       getPaginatedCompanies(router.query.page ? Number(router.query.page) : 1),
   );
-
-  function handlePageClick(selectedPage: {selected: number}) {
-    setCurrentPage(selectedPage.selected);
-    router.push(`/?page=${selectedPage.selected + 1}`);
-  }
-
-  // pagination
   const PER_PAGE = 8;
   const offset = currentPage * PER_PAGE;
   const currentPageData = companies?.data
@@ -88,28 +72,12 @@ const Homepage: NextPage = () => {
 
       <section>
         <CompanyCard companies={companies?.data} />
-
-        <div className="flex items-end justify-center gap-7">
-          <div className="flex py-6">
-            <ReactPaginate
-              previousLabel="Prev"
-              nextLabel="Next"
-              pageCount={pageCount}
-              onPageChange={handlePageClick}
-              pageRangeDisplayed={3}
-              forcePage={
-                router.query.page ? Number(router.query.page) - 1 : currentPage
-              }
-              breakLabel="..."
-              containerClassName="pagination"
-              previousLinkClassName="pagination__link--prev"
-              nextLinkClassName="pagination__link--next"
-              disabledClassName="pagination__link--disabled"
-              activeClassName="pagination__link--active"
-            />
-            {currentPageData}
-          </div>
-        </div>
+        <Pagination
+          pageCount={pageCount}
+          currentPageData={currentPageData}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
       </section>
     </>
   );
