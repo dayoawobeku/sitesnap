@@ -1,11 +1,11 @@
-import type {GetServerSideProps, NextPage} from 'next';
+import {useState} from 'react';
+import type {GetStaticProps, NextPage} from 'next';
 import Head from 'next/head';
-import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
-import PagesCard from '../../components/PagesCard';
-import {getPaginatedWebpages} from '../../queryfns/getWebpages';
-import {HeadingOne} from '../../components';
-import {ogImage, url} from '../../helpers';
 import {useRouter} from 'next/router';
+import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
+import {getWebpages} from '../../queryfns/getWebpages';
+import {HeadingOne, Pagination, PagesCard} from '../../components';
+import {ogImage, url} from '../../helpers';
 
 interface Pages {
   page_name: string;
@@ -16,13 +16,9 @@ interface Pages {
 
 const Webpages: NextPage = () => {
   const router = useRouter();
-  // const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
 
-  const {data: webpages} = useQuery(
-    ['webpages', router.query.page ? Number(router.query.page) : 1],
-    () =>
-      getPaginatedWebpages(router.query.page ? Number(router.query.page) : 1),
-  );
+  const {data: webpages} = useQuery(['webpages'], getWebpages);
 
   const pagesArray = webpages?.data?.map(
     (page: Pages) => page.attributes.pages,
@@ -48,24 +44,34 @@ const Webpages: NextPage = () => {
     );
   });
 
-  // const data = {
-  //   data: uniquePages,
-  //   meta: {
-  //     pagination: {
-  //       page: currentPage + 1,
-  //       pageCount: Math.ceil(uniquePages?.length / 8),
-  //       pageSize: 8,
-  //       total: uniquePages?.length,
-  //     },
-  //   },
-  // };
+  const data = {
+    data: uniquePages,
+    meta: {
+      pagination: {
+        page: currentPage + 1,
+        pageCount: Math.ceil(uniquePages?.length / 8),
+        pageSize: 8,
+        total: uniquePages?.length,
+      },
+    },
+  };
 
-  // const PER_PAGE = 8;
-  // const offset = currentPage * PER_PAGE;
-  // const currentPageData = data?.data
-  //   ?.slice(offset, offset + PER_PAGE)
-  //   .map(({text}: any, index: number) => <p key={index}>{text}</p>);
-  // const pageCount = Math.ceil(data?.meta?.pagination?.total / PER_PAGE);
+  const PER_PAGE = 8;
+  const offset = currentPage * PER_PAGE;
+  const currentPageData = data?.data
+    ?.slice(offset, offset + PER_PAGE)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .map(({text}: any, index: number) => <p key={index}>{text}</p>);
+  const pageCount = Math.ceil(data?.meta?.pagination?.total / PER_PAGE);
+
+  const handlePageClick = (selectedPage: {selected: number}) => {
+    setCurrentPage(selectedPage.selected);
+    router.push(`/webpages?page=${selectedPage.selected + 1}`);
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
 
   return (
     <>
@@ -107,13 +113,14 @@ const Webpages: NextPage = () => {
       <HeadingOne text="Webpages" />
 
       <section>
-        <PagesCard pages={uniquePages} />
-        {/* <Pagination
+        <PagesCard pages={data?.data?.slice(offset, offset + PER_PAGE)} />
+        <Pagination
           pageCount={pageCount}
           setCurrentPage={setCurrentPage}
           currentPage={currentPage}
           currentPageData={currentPageData}
-        /> */}
+          customHandlePageClick={handlePageClick}
+        />
       </section>
     </>
   );
@@ -121,13 +128,9 @@ const Webpages: NextPage = () => {
 
 export default Webpages;
 
-export const getServerSideProps: GetServerSideProps = async params => {
+export const getStaticProps: GetStaticProps = async () => {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(
-    ['webpages', params.query.page ? Number(params.query.page) : 1],
-    () =>
-      getPaginatedWebpages(params.query.page ? Number(params.query.page) : 1),
-  );
+  await queryClient.prefetchQuery(['webpages'], getWebpages);
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
