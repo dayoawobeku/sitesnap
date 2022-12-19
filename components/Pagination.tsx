@@ -7,6 +7,7 @@ interface PaginationProps {
   currentPageData: JSX.Element[];
   currentPage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  customHandlePageClick?: (selectedPage: {selected: number}) => void;
 }
 
 export default function Pagination({
@@ -14,6 +15,7 @@ export default function Pagination({
   currentPageData,
   currentPage,
   setCurrentPage,
+  customHandlePageClick,
 }: PaginationProps) {
   const router = useRouter();
 
@@ -30,7 +32,7 @@ export default function Pagination({
 
   useEffect(() => {
     if (router.query.page) {
-      setCurrentPage(parseInt(router.query.page as string));
+      setCurrentPage(Number(router.query.page) - 1);
     } else {
       setCurrentPage(0);
     }
@@ -43,7 +45,7 @@ export default function Pagination({
           previousLabel="Prev"
           nextLabel="Next"
           pageCount={pageCount}
-          onPageChange={handlePageClick}
+          onPageChange={customHandlePageClick ?? handlePageClick}
           pageRangeDisplayed={3}
           forcePage={
             router.query.page ? Number(router.query.page) - 1 : currentPage
