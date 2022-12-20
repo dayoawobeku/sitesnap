@@ -3,9 +3,9 @@ import type {GetStaticProps, NextPage} from 'next';
 import Head from 'next/head';
 import {useRouter} from 'next/router';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
-import {getWebpages} from '../../queryfns/getWebpages';
+import {getWebpages} from '../../queryfns';
 import {HeadingOne, Pagination, PagesCard} from '../../components';
-import {ogImage, url} from '../../helpers';
+import {ogImage, url} from '../../utils/constants';
 
 interface Pages {
   page_name: string;

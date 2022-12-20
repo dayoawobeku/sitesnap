@@ -8,8 +8,8 @@ const _debounce = require('lodash.debounce');
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {closeNav, hamburger, search} from '../assets/images/images';
 import Modal from './Modal';
-import {slugify} from '../helpers';
 import {getIndustries, getCompanies, getWebpages} from '../queryfns';
+import {slugify} from '../utils/helpers';
 
 interface Company {
   title: string;

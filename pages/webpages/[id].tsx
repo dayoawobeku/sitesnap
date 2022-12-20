@@ -4,11 +4,12 @@ import {useEffect, useRef, useState} from 'react';
 import {useRouter} from 'next/router';
 import Image, {StaticImageData} from 'next/image';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
-import {ogImage, slugify, url} from '../../helpers';
 import {getWebpages} from '../../queryfns';
 import Card from '../../components/Card';
 import {HeadingOne, Modal} from '../../components';
 import {closeIc, nextIc, prevIc} from '../../assets/images/images';
+import {slugify} from '../../utils/helpers';
+import {ogImage, url} from '../../utils/constants';
 
 interface Page {
   page_name: string;

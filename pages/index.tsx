@@ -4,8 +4,8 @@ import type {GetServerSideProps, NextPage} from 'next';
 import Head from 'next/head';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {getPaginatedCompanies} from '../queryfns';
-import {ogImage, url} from '../helpers';
 import {CompanyCard, Pagination} from '../components';
+import {ogImage, url} from '../utils/constants';
 
 const Homepage: NextPage = () => {
   const router = useRouter();

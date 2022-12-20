@@ -4,8 +4,8 @@ import Head from 'next/head';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {getPaginatedCompanies} from '../../queryfns';
 import {CompanyCard, HeadingOne, Pagination} from '../../components';
-import {ogImage, url} from '../../helpers';
 import {useRouter} from 'next/router';
+import {ogImage, url} from '../../utils/constants';
 
 const Companies: NextPage = () => {
   const router = useRouter();

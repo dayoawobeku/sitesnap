@@ -4,11 +4,12 @@ import Head from 'next/head';
 import {useRouter} from 'next/router';
 import Image, {StaticImageData} from 'next/image';
 import {closeIc, hyperlink, nextIc, prevIc} from '../../assets/images/images';
-import {ogImage, slugify, url} from '../../helpers';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {getCompany} from '../../queryfns';
 import {Card, Modal} from '../../components';
 import axios from 'axios';
+import {slugify} from '../../utils/helpers';
+import {ogImage, url} from '../../utils/constants';
 
 interface Company {
   attributes: {

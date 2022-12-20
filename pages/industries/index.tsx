@@ -3,10 +3,10 @@ import Head from 'next/head';
 import Link from 'next/link';
 import {StaticImageData} from 'next/image';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
-import {getCompanies} from '../../queryfns/getCompanies';
-import {ogImage, slugify, url} from '../../helpers';
+import {getCompanies, getIndustries} from '../../queryfns';
 import {Card, HeadingOne} from '../../components';
-import {getIndustries} from '../../queryfns';
+import {ogImage, url} from '../../utils/constants';
+import {slugify} from '../../utils/helpers';
 
 interface Company {
   id: string;
