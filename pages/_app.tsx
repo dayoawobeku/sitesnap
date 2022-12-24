@@ -37,11 +37,11 @@ function MyApp({Component, pageProps}: AppProps<MyAppProps>) {
   return (
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}>
-        <Layout>
-          <UserContext.Provider value={{scrollRef}}>
+        <UserContext.Provider value={{scrollRef}}>
+          <Layout>
             <Component {...pageProps} />
-          </UserContext.Provider>
-        </Layout>
+          </Layout>
+        </UserContext.Provider>
         <ReactQueryDevtools initialIsOpen />
       </Hydrate>
       <Analytics />
