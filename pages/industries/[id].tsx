@@ -4,9 +4,10 @@ import {StaticImageData} from 'next/image';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
-import {ogImage, slugify, url} from '../../helpers';
 import {getCompanies, getIndustry} from '../../queryfns';
 import {Card, HeadingOne} from '../../components';
+import {ogImage, url} from '../../utils/constants';
+import {slugify} from '../../utils/helpers';
 
 interface Company {
   id: string;

@@ -1,5 +1,6 @@
 import {GetServerSideProps} from 'next';
-import {slugify, url} from '../helpers';
+import {url} from '../utils/constants';
+import {slugify} from '../utils/helpers';
 
 const GET_COMPANIES = `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/companies`;
 const GET_INDUSTRIES = `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/companies?fields[0]=name&fields[1]=industry`;

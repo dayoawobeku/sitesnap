@@ -30,7 +30,6 @@ export default function CompanyCard({companies}: allCompanies) {
         <Link
           href={`/companies/${attributes.slug?.toLowerCase()}`}
           key={attributes.slug}
-          as={`/companies/${attributes.slug?.toLowerCase()}`}
         >
           <a className="flex flex-col gap-5 py-0 lg:py-14">
             <h2 className="text-md font-medium text-grey md:text-lg">

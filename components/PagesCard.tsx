@@ -1,6 +1,6 @@
 import {StaticImageData} from 'next/image';
 import Link from 'next/link';
-import {slugify} from '../helpers';
+import {slugify} from '../utils/helpers';
 import Card from './Card';
 
 interface PagesCardProps {

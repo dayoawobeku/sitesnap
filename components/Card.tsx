@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import Image, {StaticImageData} from 'next/image';
-import {plainCard} from '../assets/images/images';
+import {plainCard} from '../assets/images';
 
 interface Props {
   src: string | StaticImageData;
