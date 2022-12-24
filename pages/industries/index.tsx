@@ -7,6 +7,7 @@ import {getCompanies, getIndustries} from '../../queryfns';
 import {Card, HeadingOne} from '../../components';
 import {ogImage, url} from '../../utils/constants';
 import {slugify} from '../../utils/helpers';
+import {useMaintainScrollPos} from '../../hooks';
 
 interface Company {
   id: string;
@@ -25,10 +26,10 @@ interface Company {
 }
 
 const Industries: NextPage = () => {
+  useMaintainScrollPos();
   const {data: industries} = useQuery(['industries'], getIndustries);
   const {data: companies} = useQuery(['companies'], getCompanies);
 
-  // find the unique industries
   const uniqueIndustries = industries?.data?.filter(
     (industry: Company, index: number) => {
       return (
@@ -40,8 +41,6 @@ const Industries: NextPage = () => {
     },
   );
 
-  // sort the industries alphabetically
-
   const sortedIndustries = uniqueIndustries?.sort((a: Company, b: Company) => {
     if (a?.attributes?.industry < b?.attributes?.industry) {
       return -1;
@@ -52,8 +51,6 @@ const Industries: NextPage = () => {
     return 0;
   });
 
-  // find the companies that match the industry
-
   const companiesByIndustry = sortedIndustries?.map((industry: Company) => {
     return companies?.data?.filter(
       (company: Company) =>
@@ -61,14 +58,11 @@ const Industries: NextPage = () => {
     );
   });
 
-  // get a random company from each industry
   const randomCompanies = companiesByIndustry?.map((industry: Company[]) => {
     return industry?.sort(() => Math.random() - 0.5);
   });
 
   const flattenedCompanies = randomCompanies?.flat();
-
-  // get only 1 company from each industry
 
   const uniqueCompanies = flattenedCompanies?.filter(
     (company: Company, index: number) => {

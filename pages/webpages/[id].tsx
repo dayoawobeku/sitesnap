@@ -5,9 +5,8 @@ import {useRouter} from 'next/router';
 import Image, {StaticImageData} from 'next/image';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {getWebpages} from '../../queryfns';
-import Card from '../../components/Card';
-import {HeadingOne, Modal} from '../../components';
-import {closeIc, nextIc, prevIc} from '../../assets/images/images';
+import {Card, HeadingOne, Modal} from '../../components';
+import {closeIc, nextIc, prevIc} from '../../assets/images';
 import {slugify} from '../../utils/helpers';
 import {ogImage, url} from '../../utils/constants';
 

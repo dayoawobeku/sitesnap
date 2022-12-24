@@ -6,10 +6,12 @@ import {getPaginatedCompanies} from '../../queryfns';
 import {CompanyCard, HeadingOne, Pagination} from '../../components';
 import {useRouter} from 'next/router';
 import {ogImage, url} from '../../utils/constants';
+import {useMaintainScrollPos} from '../../hooks';
 
 const Companies: NextPage = () => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(0);
+  useMaintainScrollPos();
 
   const {data: companies} = useQuery(
     ['companies', router.query.page ? Number(router.query.page) : 1],

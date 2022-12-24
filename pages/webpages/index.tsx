@@ -6,6 +6,7 @@ import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {getWebpages} from '../../queryfns';
 import {HeadingOne, Pagination, PagesCard} from '../../components';
 import {ogImage, url} from '../../utils/constants';
+import {useMaintainScrollPos} from '../../hooks';
 
 interface Pages {
   page_name: string;
@@ -16,6 +17,7 @@ interface Pages {
 
 const Webpages: NextPage = () => {
   const router = useRouter();
+  useMaintainScrollPos();
   const [currentPage, setCurrentPage] = useState(0);
 
   const {data: webpages} = useQuery(['webpages'], getWebpages);
@@ -23,23 +25,24 @@ const Webpages: NextPage = () => {
   const pagesArray = webpages?.data?.map(
     (page: Pages) => page.attributes.pages,
   );
-  const flattenedPages = pagesArray?.flat();
-  const randomPages = flattenedPages.sort(() => Math.random() - 0.5);
 
-  // sort the random pages alphabetically
-  const sortedPages = randomPages.sort((a: Pages, b: Pages) => {
-    if (a?.page_name < b?.page_name) {
+  const flattenedPages = pagesArray.flat();
+
+  const randomizedPages = flattenedPages.sort(() => Math.random() - 0.5);
+
+  const sortedPages = randomizedPages.sort((a: Pages, b: Pages) => {
+    if (a.page_name < b.page_name) {
       return -1;
     }
-    if (a?.page_name > b?.page_name) {
+    if (a.page_name > b.page_name) {
       return 1;
     }
     return 0;
   });
 
-  const uniquePages = sortedPages?.filter((page: Pages, index: number) => {
+  const uniquePages = sortedPages.filter((page: Pages, index: number) => {
     return (
-      randomPages?.findIndex((p: Pages) => p.page_name === page.page_name) ===
+      sortedPages.findIndex((p: Pages) => p.page_name === page.page_name) ===
       index
     );
   });
@@ -69,7 +72,6 @@ const Webpages: NextPage = () => {
     router.push(`/webpages?page=${selectedPage.selected + 1}`);
     window.scrollTo({
       top: 0,
-      behavior: 'smooth',
     });
   };
 

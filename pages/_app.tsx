@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import type {AppProps} from 'next/app';
 import {Analytics} from '@vercel/analytics/react';
 import {
@@ -10,6 +10,7 @@ import {
 import {ReactQueryDevtools} from '@tanstack/react-query-devtools';
 import Layout from '../components/Layout';
 import '../styles/globals.css';
+import {UserContext} from '../context';
 
 interface MyAppProps extends AppProps {
   dehydratedState: DehydratedState;
@@ -26,11 +27,20 @@ function MyApp({Component, pageProps}: AppProps<MyAppProps>) {
         },
       }),
   );
+  const scrollRef = useRef({
+    scrollPos: 0,
+  });
+  useEffect(() => {
+    history.scrollRestoration = 'manual';
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}>
         <Layout>
-          <Component {...pageProps} />
+          <UserContext.Provider value={{scrollRef}}>
+            <Component {...pageProps} />
+          </UserContext.Provider>
         </Layout>
         <ReactQueryDevtools initialIsOpen />
       </Hydrate>
