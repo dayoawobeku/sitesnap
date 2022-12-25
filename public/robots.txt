@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://sitesnap-git-dev-sitesnap.vercel.app/sitemap.xml
