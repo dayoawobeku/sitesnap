@@ -25,7 +25,10 @@ interface Page {
 const IndividualWebpages: NextPage = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const {data: webpages} = useQuery(['webpages', router.query.id], getWebpages);
+  const {data: webpages} = useQuery({
+    queryKey: ['webpages', router.query.id],
+    queryFn: getWebpages,
+  });
 
   const pagesArray = webpages?.data?.map((page: Page) => page.attributes.pages);
 

@@ -1,4 +1,5 @@
 import {useEffect, useRef, useState} from 'react';
+import dynamic from 'next/dynamic';
 import type {AppProps} from 'next/app';
 import {Analytics} from '@vercel/analytics/react';
 import {
@@ -8,10 +9,9 @@ import {
   DehydratedState,
 } from '@tanstack/react-query';
 import {ReactQueryDevtools} from '@tanstack/react-query-devtools';
-import Layout from '../components/Layout';
 import '../styles/globals.css';
 import {UserContext} from '../context';
-
+const Layout = dynamic(() => import('../components/Layout'));
 interface MyAppProps extends AppProps {
   dehydratedState: DehydratedState;
 }
@@ -23,6 +23,7 @@ function MyApp({Component, pageProps}: AppProps<MyAppProps>) {
         defaultOptions: {
           queries: {
             refetchOnWindowFocus: false,
+            staleTime: 1000 * 60 * 60 * 24,
           },
         },
       }),

@@ -25,8 +25,14 @@ interface Company {
 }
 
 const Industries: NextPage = () => {
-  const {data: industries} = useQuery(['industries'], getIndustries);
-  const {data: companies} = useQuery(['companies'], getCompanies);
+  const {data: industries} = useQuery({
+    queryKey: ['industries'],
+    queryFn: getIndustries,
+  });
+  const {data: companies} = useQuery({
+    queryKey: ['companies'],
+    queryFn: getCompanies,
+  });
 
   const uniqueIndustries = industries?.data?.filter(
     (industry: Company, index: number) => {

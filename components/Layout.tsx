@@ -74,9 +74,18 @@ export default function Layout({children}: LayoutProps) {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [OS, setOS] = useState('');
 
-  const {data: companies} = useQuery(['companies'], getCompanies);
-  const {data: pages} = useQuery(['webpages'], getWebpages);
-  const {data: categories} = useQuery(['industries'], getIndustries);
+  const {data: companies} = useQuery({
+    queryKey: ['companies'],
+    queryFn: getCompanies,
+  });
+  const {data: pages} = useQuery({
+    queryKey: ['webpages'],
+    queryFn: getWebpages,
+  });
+  const {data: categories} = useQuery({
+    queryKey: ['industries'],
+    queryFn: getIndustries,
+  });
   const industries = categories?.data?.map(
     (category: Category) => category?.attributes?.industry,
   );
@@ -260,8 +269,8 @@ export default function Layout({children}: LayoutProps) {
               setIsOpen(false);
             }}
           >
-            <label
-              htmlFor="search"
+            <form
+              role="search"
               className="relative flex h-[3.25rem] w-full max-w-[832px] items-center justify-between lg:h-[4.25rem]"
             >
               <div className="absolute left-4 h-5 w-5">
@@ -273,9 +282,10 @@ export default function Layout({children}: LayoutProps) {
                 placeholder="Search"
                 onChange={debouncedChangeHandler}
                 defaultValue={searchTerm}
+                aria-label="Search companies, industries, and webpages"
               />
               <span className="absolute right-4 text-sm text-body">Esc</span>
-            </label>
+            </form>
 
             {results?.length > 0 ? (
               <div className="flex flex-col gap-6 overflow-y-auto rounded-lg bg-white-200 p-6">

@@ -20,7 +20,10 @@ const Webpages: NextPage = () => {
   useMaintainScrollPos();
   const [currentPage, setCurrentPage] = useState(0);
 
-  const {data: webpages} = useQuery(['webpages'], getWebpages);
+  const {data: webpages} = useQuery({
+    queryKey: ['webpages'],
+    queryFn: getWebpages,
+  });
 
   const pagesArray = webpages?.data?.map(
     (page: Pages) => page.attributes.pages,

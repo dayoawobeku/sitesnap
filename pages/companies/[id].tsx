@@ -44,9 +44,10 @@ const Company: NextPage<{
 }> = ({previewData, preview}) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const {data: company} = useQuery(['company', router.query.id], () =>
-    getCompany(router.query.id),
-  );
+  const {data: company} = useQuery({
+    queryKey: ['company', router.query.id],
+    queryFn: () => getCompany(router.query.id),
+  });
   const pagesArray =
     company?.data[0]?.attributes?.pages ||
     previewData?.data[0]?.attributes?.pages;
