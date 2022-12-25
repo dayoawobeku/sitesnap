@@ -1,10 +1,10 @@
 import {useState} from 'react';
 import type {GetServerSideProps, NextPage} from 'next';
+import {useRouter} from 'next/router';
 import Head from 'next/head';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {getPaginatedCompanies} from '../../queryfns';
 import {CompanyCard, HeadingOne, Pagination} from '../../components';
-import {useRouter} from 'next/router';
 import {ogImage, url} from '../../utils/constants';
 import {useMaintainScrollPos} from '../../hooks';
 
@@ -12,12 +12,12 @@ const Companies: NextPage = () => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(0);
   useMaintainScrollPos();
+  const routerQueryPage = router.query.page ? Number(router.query.page) : 1;
 
-  const {data: companies} = useQuery(
-    ['companies', router.query.page ? Number(router.query.page) : 1],
-    () =>
-      getPaginatedCompanies(router.query.page ? Number(router.query.page) : 1),
-  );
+  const {data: companies} = useQuery({
+    queryKey: ['companies', routerQueryPage],
+    queryFn: () => getPaginatedCompanies(routerQueryPage),
+  });
 
   const PER_PAGE = 8;
   const offset = currentPage * PER_PAGE;

@@ -25,9 +25,10 @@ interface Company {
 const IndividualIndustries: NextPage = () => {
   const router = useRouter();
 
-  const {data: industries} = useQuery(['industry', router.query.id], () =>
-    getIndustry(router.query.id),
-  );
+  const {data: industries} = useQuery({
+    queryKey: ['industries', router.query.id],
+    queryFn: () => getIndustry(router.query.id),
+  });
 
   const industryName = industries?.data?.[0]?.attributes?.industry;
 
