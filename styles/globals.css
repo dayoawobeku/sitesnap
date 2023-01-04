@@ -1,11 +1,41 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 html {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Mona Sans', sans-serif;
+}
+
+@layer base {
+  @font-face {
+    font-family: 'Mona Sans';
+    src: url('/fonts/Mona-Sans-Regular.woff2') format('woff2'),
+      url('/fonts/Mona-Sans-Regular.woff') format('woff'),
+      url('/fonts/Mona-Sans-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Mona Sans';
+    src: url('/fonts/Mona-Sans-Medium.woff2') format('woff2'),
+      url('/fonts/Mona-Sans-Medium.woff') format('woff'),
+      url('/fonts/Mona-Sans-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Mona Sans';
+    src: url('/fonts/Mona-Sans-Bold.woff2') format('woff2'),
+      url('/fonts/Mona-Sans-Bold.woff') format('woff'),
+      url('/fonts/Mona-Sans-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
 }
 
 @layer components {

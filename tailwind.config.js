@@ -30,7 +30,7 @@ module.exports = {
       },
     },
     fontFamily: {
-      sans: ['Space Grotesk'],
+      sans: ['Mona Sans', 'sans-serif'],
     },
     fontSize: {
       sm: '0.8125em', // 13px
