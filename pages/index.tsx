@@ -62,7 +62,7 @@ const Homepage: NextPage = () => {
         <meta property="twitter:image" content={ogImage} />
       </Head>
 
-      <section className="mx-auto my-6 max-w-[922px] py-4 text-center lg:my-0 lg:py-20">
+      <section className="mx-auto my-6 max-w-[1015px] py-4 text-center lg:my-0 lg:py-20">
         <h1 className="text-[1.875rem] font-bold text-grey lg:text-2xl">
           Find your favorite sites in one place, then learn from the greats.
         </h1>

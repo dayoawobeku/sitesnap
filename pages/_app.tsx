@@ -43,7 +43,7 @@ function MyApp({Component, pageProps}: AppProps<MyAppProps>) {
             <Component {...pageProps} />
           </Layout>
         </UserContext.Provider>
-        <ReactQueryDevtools initialIsOpen />
+        <ReactQueryDevtools />
       </Hydrate>
       <Analytics />
     </QueryClientProvider>
