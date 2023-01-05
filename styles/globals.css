@@ -9,9 +9,9 @@ html {
 @layer base {
   @font-face {
     font-family: 'Mona Sans';
-    src: url('/fonts/Mona-Sans-Regular.woff2') format('woff2'),
-      url('/fonts/Mona-Sans-Regular.woff') format('woff'),
-      url('/fonts/Mona-Sans-Regular.ttf') format('truetype');
+    src: url('/fonts/Mona-Sans-RegularWide.woff2') format('woff2'),
+      url('/fonts/Mona-Sans-RegularWide.woff') format('woff'),
+      url('/fonts/Mona-Sans-RegularWide.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -19,9 +19,9 @@ html {
 
   @font-face {
     font-family: 'Mona Sans';
-    src: url('/fonts/Mona-Sans-Medium.woff2') format('woff2'),
-      url('/fonts/Mona-Sans-Medium.woff') format('woff'),
-      url('/fonts/Mona-Sans-Medium.ttf') format('truetype');
+    src: url('/fonts/Mona-Sans-MediumWide.woff2') format('woff2'),
+      url('/fonts/Mona-Sans-MediumWide.woff') format('woff'),
+      url('/fonts/Mona-Sans-MediumWide.ttf') format('truetype');
     font-weight: 500;
     font-style: normal;
     font-display: swap;
@@ -29,9 +29,9 @@ html {
 
   @font-face {
     font-family: 'Mona Sans';
-    src: url('/fonts/Mona-Sans-Bold.woff2') format('woff2'),
-      url('/fonts/Mona-Sans-Bold.woff') format('woff'),
-      url('/fonts/Mona-Sans-Bold.ttf') format('truetype');
+    src: url('/fonts/Mona-Sans-BoldWide.woff2') format('woff2'),
+      url('/fonts/Mona-Sans-BoldWide.woff') format('woff'),
+      url('/fonts/Mona-Sans-BoldWide.ttf') format('truetype');
     font-weight: 700;
     font-style: normal;
     font-display: swap;

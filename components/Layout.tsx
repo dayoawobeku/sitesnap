@@ -6,7 +6,13 @@ import {useRouter} from 'next/router';
 import Fuse from 'fuse.js';
 const _debounce = require('lodash.debounce');
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
-import {closeNav, hamburger, search} from '../assets/images';
+import {
+  closeNav,
+  hamburger,
+  instagram,
+  search,
+  twitter,
+} from '../assets/images';
 import Modal from './Modal';
 import {getIndustries, getCompanies, getWebpages} from '../queryfns';
 import {slugify} from '../utils/helpers';
@@ -511,12 +517,30 @@ export default function Layout({children}: LayoutProps) {
 
       <main>{children}</main>
 
-      <footer className="py-6 md:px-5">
-        <p className="-mx-2 text-center text-[0.75rem] text-body md:text-base">
+      <footer className="flex flex-wrap items-start justify-center gap-6 py-6 sm:flex-nowrap sm:gap-10 md:px-5">
+        <p className="-mx-2 text-center text-[0.75rem] text-body md:text-left md:text-base">
           All product and company names are trademarks™ or registered®
           trademarks (including logos, screenshots and icons) remain the
           property of their respective owners.
         </p>
+        <div className="flex items-center gap-4">
+          <a
+            href="https://twitter.com/sitesnap"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="h-6 w-6"
+          >
+            <Image src={twitter} alt="twitter" width={24} height={24} />
+          </a>
+          <a
+            href="https://instagram.com/sitesnap"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="h-6 w-6"
+          >
+            <Image src={instagram} alt="instagram" width={24} height={24} />
+          </a>
+        </div>
       </footer>
     </div>
   );
