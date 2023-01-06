@@ -97,12 +97,12 @@ html {
 
   .pagination__link--prev,
   .pagination__link--next {
-    @apply flex h-full items-center justify-center;
+    @apply flex h-full items-center justify-center px-2;
   }
 
   .previous,
   .next {
-    @apply flex h-8 items-center justify-center rounded bg-white-200 px-2 text-sm font-medium text-blue;
+    @apply flex h-8 items-center justify-center rounded bg-white-200 text-sm font-medium text-blue;
   }
 
   /* end pagination */

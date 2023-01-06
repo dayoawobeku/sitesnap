@@ -533,7 +533,7 @@ export default function Layout({children}: LayoutProps) {
             <Image src={twitter} alt="twitter" width={24} height={24} />
           </a>
           <a
-            href="https://instagram.com/sitesnap"
+            href="https://instagram.com/site_snap"
             target="_blank"
             rel="noopener noreferrer"
             className="h-6 w-6"
