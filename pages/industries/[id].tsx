@@ -32,7 +32,6 @@ const IndividualIndustries: NextPage = () => {
 
   const industryName = industries?.data?.[0]?.attributes?.industry;
 
-  console.log(industryName);
   const industryCompanies = industries?.data?.filter(
     (company: Company) =>
       company.attributes.industry.toLowerCase() === industryName.toLowerCase(),

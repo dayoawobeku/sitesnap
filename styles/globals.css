@@ -4,6 +4,7 @@
 
 html {
   font-family: 'Mona Sans', sans-serif;
+  scroll-behavior: smooth;
 }
 
 @layer base {
