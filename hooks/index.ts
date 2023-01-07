@@ -1,3 +1,3 @@
-import {useMaintainScrollPos} from './useMaintainScrollPos';
+import {useScrollRestoration} from './useMaintainScrollPos';
 
-export {useMaintainScrollPos};
+export {useScrollRestoration};

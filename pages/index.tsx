@@ -6,14 +6,12 @@ import Head from 'next/head';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {getPaginatedCompanies} from '../queryfns';
 import {ogImage, url} from '../utils/constants';
-import {useMaintainScrollPos} from '../hooks';
 const Pagination = dynamic(() => import('../components/Pagination'));
 const CompanyCard = dynamic(() => import('../components/CompanyCard'));
 
 const Homepage: NextPage = () => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(0);
-  useMaintainScrollPos();
   const routerQueryPage = router.query.page ? Number(router.query.page) : 1;
 
   const {data: companies} = useQuery({

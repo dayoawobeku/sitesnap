@@ -6,7 +6,6 @@ import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {getWebpages} from '../../queryfns';
 import {HeadingOne, Pagination, PagesCard} from '../../components';
 import {ogImage, url} from '../../utils/constants';
-import {useMaintainScrollPos} from '../../hooks';
 
 interface Pages {
   page_name: string;
@@ -17,7 +16,6 @@ interface Pages {
 
 const Webpages: NextPage = () => {
   const router = useRouter();
-  useMaintainScrollPos();
   const [currentPage, setCurrentPage] = useState(0);
 
   const {data: webpages} = useQuery({
