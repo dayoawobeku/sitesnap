@@ -5,8 +5,15 @@ function slugify(string: string) {
     .replace(/ +/g, '-');
 }
 
+function unslugify(string: string) {
+  return string
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
 function capitalizeFirstLetter(word: string) {
   return word?.charAt(0).toUpperCase() + word?.slice(1);
 }
 
-export {slugify, capitalizeFirstLetter};
+export {slugify, unslugify, capitalizeFirstLetter};

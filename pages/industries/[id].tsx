@@ -7,7 +7,7 @@ import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {getCompanies, getIndustry} from '../../queryfns';
 import {Card, HeadingOne} from '../../components';
 import {ogImage, url} from '../../utils/constants';
-import {slugify} from '../../utils/helpers';
+import {slugify, unslugify} from '../../utils/helpers';
 
 interface Company {
   id: string;
@@ -24,10 +24,11 @@ interface Company {
 
 const IndividualIndustries: NextPage = () => {
   const router = useRouter();
+  const unSlugifiedIndustryName = unslugify(router.query.id as string);
 
   const {data: industries} = useQuery({
-    queryKey: ['industry', router.query.id],
-    queryFn: () => getIndustry(router.query.id),
+    queryKey: ['industry', unSlugifiedIndustryName],
+    queryFn: () => getIndustry(unSlugifiedIndustryName),
   });
 
   const industryName = industries?.data?.[0]?.attributes?.industry;
@@ -85,7 +86,7 @@ const IndividualIndustries: NextPage = () => {
           property="twitter:url"
           content={`${url}/industries/${router.query.id}`}
         />
-        {/* <meta property="twitter:site" content="@sitesnap_design" /> */}
+        <meta property="twitter:site" content="@sitesnap" />
         <meta
           property="twitter:title"
           content={`industries (${metaTitle}) - sitesnap.design`}
@@ -149,8 +150,10 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({params}: {params: {id: string}}) {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(['industry', params.id], () =>
-    getIndustry(params.id),
+  const unSlugifiedIndustryName = unslugify(params.id as string);
+
+  await queryClient.prefetchQuery(['industry', unSlugifiedIndustryName], () =>
+    getIndustry(unSlugifiedIndustryName),
   );
   return {
     props: {

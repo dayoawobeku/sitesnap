@@ -245,7 +245,7 @@ const Company: NextPage<{
           property="twitter:url"
           content={`${url}/companies/${router.query.id}`}
         />
-        {/* <meta property="twitter:site" content="@sitesnap_design" /> */}
+        <meta property="twitter:site" content="@sitesnap" />
         <meta
           property="twitter:title"
           content={`${metaTitle} - sitesnap.design`}
