@@ -220,7 +220,7 @@ const IndividualWebpages: NextPage = () => {
           property="twitter:url"
           content={`${url}/webpages/${router.query.id}`}
         />
-        {/* <meta property="twitter:site" content="@sitesnap_design" /> */}
+        <meta property="twitter:site" content="@sitesnap" />
         <meta
           property="twitter:title"
           content={`webpages (${metaTitle}) - sitesnap.design`}

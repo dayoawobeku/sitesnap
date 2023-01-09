@@ -51,7 +51,7 @@ const Homepage: NextPage = () => {
         {/* Twitter */}
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content={url} />
-        {/* <meta property="twitter:site" content="@sitesnap_design" /> */}
+        <meta property="twitter:site" content="@sitesnap" />
         <meta property="twitter:title" content="sitesnap.design" />
         <meta
           property="twitter:description"
