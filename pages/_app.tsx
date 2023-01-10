@@ -12,6 +12,7 @@ import {ReactQueryDevtools} from '@tanstack/react-query-devtools';
 import '../styles/globals.css';
 const Layout = dynamic(() => import('../components/Layout'));
 import {useScrollRestoration} from '../hooks/useMaintainScrollPos';
+import Script from 'next/script';
 interface MyAppProps extends AppProps {
   dehydratedState: DehydratedState;
 }
@@ -31,15 +32,32 @@ function MyApp({Component, pageProps}: AppProps<MyAppProps>) {
   useScrollRestoration();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Hydrate state={pageProps.dehydratedState}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-        <ReactQueryDevtools />
-      </Hydrate>
-      <Analytics />
-    </QueryClientProvider>
+    <>
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID}`}
+        strategy="lazyOnload"
+      />
+      <Script id="gtag" strategy="lazyOnload">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+        
+          gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID}', {
+            page_path: window.location.pathname,
+          });
+        `}
+      </Script>
+      <QueryClientProvider client={queryClient}>
+        <Hydrate state={pageProps.dehydratedState}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+          <ReactQueryDevtools />
+        </Hydrate>
+        <Analytics />
+      </QueryClientProvider>
+    </>
   );
 }
 
