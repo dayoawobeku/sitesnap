@@ -250,7 +250,7 @@ export default function Layout({children}: LayoutProps) {
             <ul className="nav-ul hidden items-center gap-2 font-medium md:mr-2 lg:mr-4 lg:flex lg:gap-4">
               <li className={`${companyTab} whitespace-nowrap`}>
                 <Link href="/companies">
-                  <a>Companies ({companies?.data.length ?? '-'})</a>
+                  <a>Companies ({companies?.meta?.pagination?.total ?? '-'})</a>
                 </Link>
               </li>
               <li className={`${industryTab} whitespace-nowrap`}>
