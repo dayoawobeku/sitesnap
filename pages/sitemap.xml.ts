@@ -66,7 +66,7 @@ function generateSiteMap({
         ${industries?.map(({attributes}) => {
           return `
         <url>
-            <loc>${`${url}/industries/${attributes.industry.toLowerCase()}`}</loc>
+            <loc>${`${url}/industries/${slugify(attributes.industry)}`}</loc>
         </url>
      `;
         })}
