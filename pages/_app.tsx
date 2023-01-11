@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import dynamic from 'next/dynamic';
 import type {AppProps} from 'next/app';
+import Script from 'next/script';
 import {Analytics} from '@vercel/analytics/react';
 import {
   QueryClientProvider,
@@ -12,7 +13,6 @@ import {ReactQueryDevtools} from '@tanstack/react-query-devtools';
 import '../styles/globals.css';
 const Layout = dynamic(() => import('../components/Layout'));
 import {useScrollRestoration} from '../hooks/useMaintainScrollPos';
-import Script from 'next/script';
 interface MyAppProps extends AppProps {
   dehydratedState: DehydratedState;
 }
