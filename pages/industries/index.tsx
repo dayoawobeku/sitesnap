@@ -1,12 +1,11 @@
+import {useState} from 'react';
 import type {GetStaticProps, NextPage} from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 import {StaticImageData} from 'next/image';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {getCompanies, getIndustries} from '../../queryfns';
-import {Card, HeadingOne} from '../../components';
+import {HeadingOne, IndustriesCard, Pagination} from '../../components';
 import {ogImage, url} from '../../utils/constants';
-import {slugify} from '../../utils/helpers';
 
 interface Company {
   id: string;
@@ -33,6 +32,7 @@ const Industries: NextPage = () => {
     queryKey: ['companies'],
     queryFn: getCompanies,
   });
+  const [currentPage, setCurrentPage] = useState(0);
 
   const uniqueIndustries = industries?.data?.filter(
     (industry: Company, index: number) => {
@@ -79,6 +79,26 @@ const Industries: NextPage = () => {
     },
   );
 
+  const data = {
+    data: uniqueCompanies,
+    meta: {
+      pagination: {
+        page: currentPage + 1,
+        pageCount: Math.ceil(uniqueCompanies?.length / 8),
+        pageSize: 8,
+        total: uniqueCompanies?.length,
+      },
+    },
+  };
+
+  const PER_PAGE = 8;
+  const offset = currentPage * PER_PAGE;
+  const currentPageData = data?.data
+    ?.slice(offset, offset + PER_PAGE)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .map(({text}: any, index: number) => <p key={index}>{text}</p>);
+  const pageCount = Math.ceil(data?.meta?.pagination?.total / PER_PAGE);
+
   return (
     <>
       <Head>
@@ -118,25 +138,17 @@ const Industries: NextPage = () => {
 
       <HeadingOne text="Industries" />
 
-      <article className="card lg:px-3">
-        {uniqueCompanies?.map((company: Company) => (
-          <Link
-            key={company && company.id}
-            href={`/industries/${slugify(company?.attributes?.industry)}`}
-          >
-            <a className="flex flex-col gap-5 py-0 lg:py-14">
-              <h2 className="text-md font-medium text-grey md:text-lg">
-                {company?.attributes?.industry}
-              </h2>
-              <Card
-                src={company?.attributes?.pages[0].thumbnail_url}
-                image_data={company?.attributes?.pages[0].thumbnail_url}
-                alt={company?.attributes?.industry}
-              />
-            </a>
-          </Link>
-        ))}
-      </article>
+      <section>
+        <IndustriesCard
+          industries={data?.data?.slice(offset, offset + PER_PAGE)}
+        />
+        <Pagination
+          pageCount={pageCount}
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+          currentPageData={currentPageData}
+        />
+      </section>
     </>
   );
 };
