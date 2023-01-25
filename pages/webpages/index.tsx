@@ -53,7 +53,7 @@ const Webpages: NextPage = () => {
     meta: {
       pagination: {
         page: currentPage + 1,
-        pageCount: Math.ceil(uniquePages?.length / 8),
+        pageCount: Math.ceil(uniquePages?.length / 16),
         pageSize: 16,
         total: uniquePages?.length,
       },

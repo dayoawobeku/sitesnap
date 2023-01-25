@@ -84,7 +84,7 @@ const Industries: NextPage = () => {
     meta: {
       pagination: {
         page: currentPage + 1,
-        pageCount: Math.ceil(uniqueCompanies?.length / 8),
+        pageCount: Math.ceil(uniqueCompanies?.length / 16),
         pageSize: 16,
         total: uniqueCompanies?.length,
       },

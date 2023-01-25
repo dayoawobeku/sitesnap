@@ -10,9 +10,6 @@ module.exports = {
       spacing: {
         13: '3.25rem',
       },
-      width: {
-        155: '38.75rem',
-      },
       screens: {
         '3xl': '1800px',
       },
