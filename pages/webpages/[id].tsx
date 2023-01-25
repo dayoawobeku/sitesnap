@@ -293,8 +293,11 @@ const IndividualWebpages: NextPage = () => {
       <section>
         <div className="card lg:px-3">
           {specificPages?.map((page: Page, index: number) => (
-            <article key={index} className="flex flex-col gap-5 py-0 lg:py-14">
-              <h2 className="text-md font-medium text-grey">
+            <article
+              key={index}
+              className="flex flex-col gap-4 py-0 md:gap-5 lg:py-14"
+            >
+              <h2 className="text-md-small font-medium text-grey md:text-md">
                 {page.company_name}
               </h2>
               <Card

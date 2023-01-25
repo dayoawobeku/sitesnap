@@ -54,13 +54,13 @@ const Webpages: NextPage = () => {
       pagination: {
         page: currentPage + 1,
         pageCount: Math.ceil(uniquePages?.length / 8),
-        pageSize: 8,
+        pageSize: 16,
         total: uniquePages?.length,
       },
     },
   };
 
-  const PER_PAGE = 8;
+  const PER_PAGE = 16;
   const offset = currentPage * PER_PAGE;
   const currentPageData = data?.data
     ?.slice(offset, offset + PER_PAGE)

@@ -10,6 +10,12 @@ module.exports = {
       spacing: {
         13: '3.25rem',
       },
+      width: {
+        155: '38.75rem',
+      },
+      screens: {
+        '3xl': '1800px',
+      },
       transitionProperty: {
         outlineOffset: 'outline-offset',
       },
@@ -35,6 +41,7 @@ module.exports = {
     fontSize: {
       sm: '0.8125em', // 13px
       base: '1rem', // 16px
+      'md-small': '1.25rem', // 20px
       md: '1.5rem', // 24px
       lg: '2rem', // 32px
       xl: '2.5rem', // 40px

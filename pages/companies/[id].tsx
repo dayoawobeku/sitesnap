@@ -349,8 +349,13 @@ const Company: NextPage<{
 
       <section className="card">
         {pagesArray?.map((page: Page, index: number) => (
-          <article key={index} className="flex flex-col gap-5 py-0 lg:py-14">
-            <h2 className="text-md font-medium text-grey">{page?.page_name}</h2>
+          <article
+            key={index}
+            className="flex flex-col gap-4 py-0 md:gap-5 lg:py-14"
+          >
+            <h2 className="text-md-small font-medium text-grey md:text-md">
+              {page?.page_name}
+            </h2>
             <Card
               src={page?.thumbnail_url}
               alt={`${page?.company_name}-${page?.page_name}`}

@@ -70,7 +70,11 @@ html {
   }
 
   .card {
-    @apply grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2 lg:gap-x-12;
+    @apply grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2 lg:gap-x-12 3xl:grid-cols-3;
+  }
+
+  .card-with-smaller-imgs {
+    @apply grid grid-cols-[repeat(auto-fill,minmax(theme(width.64),1fr))] gap-x-6 gap-y-6 md:gap-y-0;
   }
 
   /* pagination */
@@ -126,4 +130,11 @@ html {
   /* min-width: auto !important; */
   /* max-width: 100% !important; */
   min-height: auto !important;
+}
+
+.truncated-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
