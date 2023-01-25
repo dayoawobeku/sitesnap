@@ -5,9 +5,10 @@ import Link from 'next/link';
 import {useRouter} from 'next/router';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {getCompanies, getIndustry} from '../../queryfns';
-import {Card, HeadingOne} from '../../components';
+import {Card, HeadingOne, Pagination} from '../../components';
 import {ogImage, url} from '../../utils/constants';
 import {slugify, unslugify} from '../../utils/helpers';
+import {useState} from 'react';
 
 interface Company {
   id: string;
@@ -43,6 +44,27 @@ const IndividualIndustries: NextPage = () => {
   );
 
   const metaTitle = industryName.toLowerCase();
+
+  const [currentPage, setCurrentPage] = useState(0);
+  const data = {
+    data: companiesList,
+    meta: {
+      pagination: {
+        page: currentPage + 1,
+        pageCount: Math.ceil(companiesList?.length / 16),
+        pageSize: 16,
+        total: companiesList?.length,
+      },
+    },
+  };
+
+  const PER_PAGE = 16;
+  const offset = currentPage * PER_PAGE;
+  const currentPageData = data?.data
+    ?.slice(offset, offset + PER_PAGE)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .map(({text}: any, index: number) => <p key={index}>{text}</p>);
+  const pageCount = Math.ceil(data?.meta?.pagination?.total / PER_PAGE);
 
   return (
     <>
@@ -102,22 +124,32 @@ const IndividualIndustries: NextPage = () => {
 
       <section>
         <div className="card lg:px-3">
-          {companiesList?.map((company: Company, index: number) => (
-            <Link key={index} href={`/companies/${slugify(company.name)}`}>
-              <a className="flex flex-col gap-4 py-0 md:gap-5 lg:py-14">
-                <h2 className="text-md-small font-medium text-grey md:text-md">
-                  {company.name}
-                </h2>
-                <Card
-                  src={company?.pages[0]?.thumbnail_url}
-                  alt=""
-                  image_data={company?.pages[0]?.thumbnail_url}
-                />
-              </a>
-            </Link>
-          ))}
+          {data?.data
+            ?.slice(offset, offset + PER_PAGE)
+            ?.map((company: Company, index: number) => (
+              <Link key={index} href={`/companies/${slugify(company.name)}`}>
+                <a className="flex flex-col gap-4 py-0 md:gap-5 lg:py-14">
+                  <h2 className="text-md-small font-medium text-grey md:text-md">
+                    {company.name}
+                  </h2>
+                  <Card
+                    src={company?.pages[0]?.thumbnail_url}
+                    alt=""
+                    image_data={company?.pages[0]?.thumbnail_url}
+                  />
+                </a>
+              </Link>
+            ))}
         </div>
       </section>
+      {data?.data?.length > PER_PAGE ? (
+        <Pagination
+          pageCount={pageCount}
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+          currentPageData={currentPageData}
+        />
+      ) : null}
     </>
   );
 };

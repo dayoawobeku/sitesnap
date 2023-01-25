@@ -5,7 +5,7 @@ import {useRouter} from 'next/router';
 import Image, {StaticImageData} from 'next/image';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {getWebpages} from '../../queryfns';
-import {Card, HeadingOne, Modal} from '../../components';
+import {Card, HeadingOne, Modal, Pagination} from '../../components';
 import {closeIc, nextIc, prevIc} from '../../assets/images';
 import {slugify} from '../../utils/helpers';
 import {ogImage, url} from '../../utils/constants';
@@ -178,6 +178,27 @@ const IndividualWebpages: NextPage = () => {
 
   const metaTitle = specificPages?.[0]?.page_name.toLowerCase();
 
+  const [currentPage, setCurrentPage] = useState(0);
+  const data = {
+    data: specificPages,
+    meta: {
+      pagination: {
+        page: currentPage + 1,
+        pageCount: Math.ceil(specificPages?.length / 16),
+        pageSize: 16,
+        total: specificPages?.length,
+      },
+    },
+  };
+
+  const PER_PAGE = 16;
+  const offset = currentPage * PER_PAGE;
+  const currentPageData = data?.data
+    ?.slice(offset, offset + PER_PAGE)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .map(({text}: any, index: number) => <p key={index}>{text}</p>);
+  const pageCount = Math.ceil(data?.meta?.pagination?.total / PER_PAGE);
+
   return (
     <>
       <Head>
@@ -292,29 +313,39 @@ const IndividualWebpages: NextPage = () => {
 
       <section>
         <div className="card lg:px-3">
-          {specificPages?.map((page: Page, index: number) => (
-            <article
-              key={index}
-              className="flex flex-col gap-4 py-0 md:gap-5 lg:py-14"
-            >
-              <h2 className="text-md-small font-medium text-grey md:text-md">
-                {page.company_name}
-              </h2>
-              <Card
-                src={page.thumbnail_url}
-                alt={page.company_name}
-                image_data={page.thumbnail_url}
-                onClick={() => openModal(page)}
-                onKeyDown={e => {
-                  if (e.key === 'Enter') {
-                    openModal(page);
-                  }
-                }}
-              />
-            </article>
-          ))}
+          {data?.data
+            ?.slice(offset, offset + PER_PAGE)
+            ?.map((page: Page, index: number) => (
+              <article
+                key={index}
+                className="flex flex-col gap-4 py-0 md:gap-5 lg:py-14"
+              >
+                <h2 className="text-md-small font-medium text-grey md:text-md">
+                  {page.company_name}
+                </h2>
+                <Card
+                  src={page.thumbnail_url}
+                  alt={page.company_name}
+                  image_data={page.thumbnail_url}
+                  onClick={() => openModal(page)}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') {
+                      openModal(page);
+                    }
+                  }}
+                />
+              </article>
+            ))}
         </div>
       </section>
+      {data?.data?.length > PER_PAGE ? (
+        <Pagination
+          pageCount={pageCount}
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+          currentPageData={currentPageData}
+        />
+      ) : null}
     </>
   );
 };
