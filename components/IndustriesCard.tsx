@@ -24,8 +24,8 @@ export default function IndustriesCard({industries}: {industries: Company[]}) {
           key={company && company.id}
           href={`/industries/${slugify(company?.attributes?.industry)}`}
         >
-          <a className="flex flex-col gap-5 py-0 lg:py-14">
-            <h2 className="text-md font-medium text-grey md:text-lg">
+          <a className="flex flex-col gap-4 py-0 md:gap-5 lg:py-14">
+            <h2 className="text-md-small font-medium text-grey md:text-md">
               {company?.attributes?.industry}
             </h2>
             <Card

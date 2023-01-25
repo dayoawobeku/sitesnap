@@ -23,14 +23,14 @@ interface allCompanies {
 
 export default function CompanyCard({companies}: allCompanies) {
   return (
-    <article className="card lg:px-3">
+    <article className="card-with-smaller-imgs lg:px-3">
       {companies?.map(({attributes}) => (
         <Link
           href={`/companies/${attributes.slug?.toLowerCase()}`}
           key={attributes.slug}
         >
-          <a className="flex flex-col gap-5 py-0 lg:py-14">
-            <h2 className="text-md font-medium text-grey md:text-lg">
+          <a className="flex flex-col gap-4 py-0 lg:py-8">
+            <h2 className="text-md-small font-medium text-grey">
               {attributes.name}
             </h2>
             <Card
@@ -38,7 +38,7 @@ export default function CompanyCard({companies}: allCompanies) {
               alt=""
               image_data={attributes.pages[0]?.thumbnail_url}
             />
-            <p className="text-body">{attributes.description}</p>
+            <p className="truncated-text text-body">{attributes.description}</p>
           </a>
         </Link>
       ))}

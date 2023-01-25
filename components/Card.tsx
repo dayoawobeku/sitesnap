@@ -8,6 +8,8 @@ interface Props {
   image_data: string | StaticImageData;
   alt: string;
   onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
+  cardWidth?: number;
+  cardHeight?: number;
 }
 
 export default function Card({
@@ -16,6 +18,8 @@ export default function Card({
   image_data,
   alt,
   onKeyDown,
+  cardWidth,
+  cardHeight,
 }: Props) {
   // function to replace the blurDataURL with a blurred image of the src from cloudinary
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -38,12 +42,12 @@ export default function Card({
   return (
     <>
       {image_data ? (
-        <article className="relative w-full rounded border-[0.5px] border-body focus-within:border-blue lg:rounded-2xl">
+        <article className="relative w-full rounded border-[0.5px] border-body focus-within:border-blue hover:border-blue lg:rounded-2xl">
           <Image
             alt={alt}
             src={src ?? plainCard}
-            width={620}
-            height={411}
+            width={cardWidth ?? 310}
+            height={cardHeight ?? 199}
             layout="responsive"
             objectFit="cover"
             objectPosition="top"

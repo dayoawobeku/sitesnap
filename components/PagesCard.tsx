@@ -18,8 +18,10 @@ export default function PagesCard({pages}: allPages) {
     <div className="card lg:px-3">
       {pages?.map(({page_name, thumbnail_url}, index) => (
         <Link key={index} href={`/webpages/${slugify(page_name)}`}>
-          <a className="flex flex-col gap-5 py-0 lg:py-14">
-            <h2 className="text-md font-medium text-grey">{page_name}</h2>
+          <a className="flex flex-col gap-4 py-0 md:gap-5 lg:py-14">
+            <h2 className="text-md-small font-medium text-grey md:text-md">
+              {page_name}
+            </h2>
             <Card src={thumbnail_url} alt="" image_data={thumbnail_url} />
           </a>
         </Link>

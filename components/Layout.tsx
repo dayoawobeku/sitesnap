@@ -229,10 +229,10 @@ export default function Layout({children}: LayoutProps) {
     pathname === '/webpages' ? 'text-blue hover:text-blue' : 'text-body';
 
   return (
-    <div className="mx-auto max-w-[1345px] px-4">
+    <div className="mx-auto px-4 xl:px-16">
       <nav className="pt-6 lg:py-8">
         <div className="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center lg:gap-0">
-          <div className="flex w-full items-center justify-between gap-2 lg:justify-start lg:gap-2 xl:gap-4">
+          <div className="w- flex w-full items-center justify-between gap-2 lg:justify-start lg:gap-2 xl:gap-4">
             <Link href="/">
               <a className="text-md font-medium text-blue">sitesnap.design</a>
             </Link>

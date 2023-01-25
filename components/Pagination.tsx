@@ -47,6 +47,7 @@ export default function Pagination({
           pageCount={pageCount}
           onPageChange={customHandlePageClick ?? handlePageClick}
           pageRangeDisplayed={3}
+          marginPagesDisplayed={1}
           forcePage={
             router.query.page ? Number(router.query.page) - 1 : currentPage
           }
