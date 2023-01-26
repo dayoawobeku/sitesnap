@@ -184,14 +184,14 @@ const IndividualWebpages: NextPage = () => {
     meta: {
       pagination: {
         page: currentPage + 1,
-        pageCount: Math.ceil(specificPages?.length / 16),
-        pageSize: 16,
+        pageCount: Math.ceil(specificPages?.length / 60),
+        pageSize: 60,
         total: specificPages?.length,
       },
     },
   };
 
-  const PER_PAGE = 16;
+  const PER_PAGE = 60;
   const offset = currentPage * PER_PAGE;
   const currentPageData = data?.data
     ?.slice(offset, offset + PER_PAGE)
@@ -338,14 +338,12 @@ const IndividualWebpages: NextPage = () => {
             ))}
         </div>
       </section>
-      {data?.data?.length > PER_PAGE ? (
-        <Pagination
-          pageCount={pageCount}
-          setCurrentPage={setCurrentPage}
-          currentPage={currentPage}
-          currentPageData={currentPageData}
-        />
-      ) : null}
+      <Pagination
+        pageCount={pageCount}
+        setCurrentPage={setCurrentPage}
+        currentPage={currentPage}
+        currentPageData={currentPageData}
+      />
     </>
   );
 };

@@ -15,7 +15,7 @@ function getCompanies() {
 function getPaginatedCompanies(pageIndex = 1) {
   return axios
     .get(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/companies?pagination[page]=${pageIndex}&pagination[pageSize]=16&sort=createdAt:DESC`,
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/companies?pagination[page]=${pageIndex}&pagination[pageSize]=60&sort=createdAt:DESC`,
     )
     .then(res => res.data);
 }

@@ -84,14 +84,14 @@ const Industries: NextPage = () => {
     meta: {
       pagination: {
         page: currentPage + 1,
-        pageCount: Math.ceil(uniqueCompanies?.length / 16),
-        pageSize: 16,
+        pageCount: Math.ceil(uniqueCompanies?.length / 60),
+        pageSize: 60,
         total: uniqueCompanies?.length,
       },
     },
   };
 
-  const PER_PAGE = 16;
+  const PER_PAGE = 60;
   const offset = currentPage * PER_PAGE;
   const currentPageData = data?.data
     ?.slice(offset, offset + PER_PAGE)

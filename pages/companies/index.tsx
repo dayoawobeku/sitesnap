@@ -17,7 +17,7 @@ const Companies: NextPage = () => {
     queryFn: () => getPaginatedCompanies(routerQueryPage),
   });
 
-  const PER_PAGE = 16;
+  const PER_PAGE = 60;
   const offset = currentPage * PER_PAGE;
   const currentPageData = companies?.data
     .slice(offset, offset + PER_PAGE)
