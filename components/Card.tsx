@@ -42,7 +42,7 @@ export default function Card({
   return (
     <>
       {image_data ? (
-        <article className="relative w-full rounded border-[0.5px] border-body focus-within:border-blue hover:border-blue lg:rounded-2xl">
+        <article className="relative w-full rounded border-[0.5px] border-body focus-within:border-blue hover:border-blue">
           <Image
             alt={alt}
             src={src ?? plainCard}
@@ -57,7 +57,7 @@ export default function Card({
                 ? blurImage(src)
                 : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xg8AAnMBeJQW2OIAAAAASUVORK5CYII='
             }
-            className="cursor-pointer rounded lg:rounded-2xl"
+            className="cursor-pointer rounded"
             onClick={onClick}
             tabIndex={typeof onClick === 'function' ? 0 : -1}
             onKeyDown={onKeyDown}
