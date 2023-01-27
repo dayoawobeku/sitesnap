@@ -7,7 +7,7 @@ import axios from 'axios';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
 import {closeIc, hyperlink, nextIc, prevIc} from '../../assets/images';
 import {getCompany} from '../../queryfns';
-import {Card, Modal, Pagination} from '../../components';
+import {Card, Modal} from '../../components';
 import {slugify} from '../../utils/helpers';
 import {ogImage, url} from '../../utils/constants';
 
@@ -206,7 +206,7 @@ const Company: NextPage<{
 
   const metaTitle = company?.data[0]?.attributes?.name.toLowerCase();
 
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage] = useState(0);
   const data = {
     data: pagesArray,
     meta: {
@@ -221,11 +221,11 @@ const Company: NextPage<{
 
   const PER_PAGE = 60;
   const offset = currentPage * PER_PAGE;
-  const currentPageData = data?.data
-    ?.slice(offset, offset + PER_PAGE)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .map(({text}: any, index: number) => <p key={index}>{text}</p>);
-  const pageCount = Math.ceil(data?.meta?.pagination?.total / PER_PAGE);
+  // const currentPageData = data?.data
+  //   ?.slice(offset, offset + PER_PAGE)
+  //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //   .map(({text}: any, index: number) => <p key={index}>{text}</p>);
+  // const pageCount = Math.ceil(data?.meta?.pagination?.total / PER_PAGE);
 
   return (
     <>
@@ -393,12 +393,12 @@ const Company: NextPage<{
             </article>
           ))}
       </section>
-      <Pagination
+      {/* <Pagination
         pageCount={pageCount}
         setCurrentPage={setCurrentPage}
         currentPage={currentPage}
         currentPageData={currentPageData}
-      />
+      /> */}
     </>
   );
 };
