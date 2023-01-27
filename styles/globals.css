@@ -74,7 +74,7 @@ html {
   }
 
   .card-with-smaller-imgs {
-    @apply grid grid-cols-[repeat(auto-fill,minmax(theme(width.64),1fr))] gap-x-6 gap-y-6 md:gap-y-0;
+    @apply grid gap-x-6 gap-y-6 sm:grid-cols-[repeat(auto-fill,minmax(theme(width.25),1fr))] md:gap-y-0;
   }
 
   /* pagination */

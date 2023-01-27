@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useCallback, useEffect} from 'react';
 import {useRouter} from 'next/router';
 import ReactPaginate from 'react-paginate';
 
@@ -30,13 +30,17 @@ export default function Pagination({
     });
   }
 
-  useEffect(() => {
+  const handleCurrentPage = useCallback(() => {
     if (router.query.page) {
       setCurrentPage(Number(router.query.page) - 1);
     } else {
       setCurrentPage(0);
     }
   }, [router.query.page, setCurrentPage]);
+
+  useEffect(() => {
+    handleCurrentPage();
+  }, [handleCurrentPage]);
 
   return (
     <div className="flex items-end justify-center gap-7">

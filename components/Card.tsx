@@ -46,8 +46,8 @@ export default function Card({
           <Image
             alt={alt}
             src={src ?? plainCard}
-            width={cardWidth ?? 310}
-            height={cardHeight ?? 199}
+            width={cardWidth ?? 403}
+            height={cardHeight ?? 259}
             layout="responsive"
             objectFit="cover"
             objectPosition="top"
