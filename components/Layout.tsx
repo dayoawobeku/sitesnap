@@ -22,6 +22,7 @@ interface Company {
   attributes: {
     industry: string;
     name: string;
+    slug: string;
     pages: [
       {
         page_name: string;
@@ -129,6 +130,7 @@ export default function Layout({children}: LayoutProps) {
       title: company?.attributes?.name,
       industry: company?.attributes?.industry,
       pages: company?.attributes?.pages?.map(page => page.page_name),
+      slug: slugify(company?.attributes?.slug),
     };
   });
 
@@ -387,9 +389,11 @@ export default function Layout({children}: LayoutProps) {
                     {Object.entries(titleCounts).map(([key]) => (
                       <Link
                         key={key}
-                        href={`/companies/${slugify(
-                          key.replace('title', '').trim(),
-                        )}`}
+                        href={`/companies/${key
+                          .replace(/ /g, '-')
+                          .toLowerCase()
+                          .replace('title', '')
+                          .replace(/-+$/, '')}`}
                       >
                         <a
                           onClick={() => {
