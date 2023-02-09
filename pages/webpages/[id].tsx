@@ -9,6 +9,7 @@ import {Card, HeadingOne, Modal, Pagination} from '../../components';
 import {closeIc, nextIc, prevIc} from '../../assets/images';
 import {slugify} from '../../utils/helpers';
 import {ogImage, url} from '../../utils/constants';
+import Link from 'next/link';
 
 interface Page {
   page_name: string;
@@ -272,9 +273,16 @@ const IndividualWebpages: NextPage = () => {
           <p className="font-medium text-body">
             {specificPages?.[0]?.page_name}
           </p>
-          <p className="font-medium text-body">
-            {activePage?.company_name ?? '-'}
-          </p>
+          <Link
+            href={`/companies/${activePage?.company_name
+              .replace(/ /g, '-')
+              .toLowerCase()
+              .replace(/-+$/, '')}`}
+          >
+            <a className="font-medium text-body hover:text-blue">
+              {activePage?.company_name ?? '-'}
+            </a>
+          </Link>
           <div className="flex items-center gap-6">
             <button onClick={getPrevCompany} className="h-6 w-6">
               <Image alt="prev" src={prevIc} width={24} height={24} />
