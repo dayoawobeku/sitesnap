@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import type {GetStaticProps, NextPage} from 'next';
+import type {GetServerSideProps, NextPage} from 'next';
 import Head from 'next/head';
 import {useRouter} from 'next/router';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
@@ -131,7 +131,7 @@ const Webpages: NextPage = () => {
 
 export default Webpages;
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(['webpages'], getWebpages);
   return {
