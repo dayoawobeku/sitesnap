@@ -112,7 +112,7 @@ const Industries: NextPage = () => {
         />
         <meta
           name="description"
-          content="Find your favorite sites in one place, then learn from the greats."
+          content="Seek inspiration for web design at Sitesnap! Explore our curated collection of innovative African websites, fueling creativity for designers & developers."
         />
         <link rel="icon" href="/favicon.ico" />
         {/* Open Graph / Facebook */}
@@ -122,7 +122,7 @@ const Industries: NextPage = () => {
         <meta
           name="description"
           property="og:description"
-          content="Find your favorite sites in one place, then learn from the greats."
+          content="Seek inspiration for web design at Sitesnap! Explore our curated collection of innovative African websites, fueling creativity for designers & developers."
         />
         <meta property="og:site_name" content="sitesnap.design" />
         <meta name="image" property="og:image" content={ogImage} />
@@ -133,7 +133,7 @@ const Industries: NextPage = () => {
         <meta property="twitter:title" content="industries - sitesnap.design" />
         <meta
           property="twitter:description"
-          content="Find your favorite sites in one place, then learn from the greats."
+          content="Seek inspiration for web design at Sitesnap! Explore our curated collection of innovative African websites, fueling creativity for designers & developers."
         />
         <meta property="twitter:image" content={ogImage} />
       </Head>
