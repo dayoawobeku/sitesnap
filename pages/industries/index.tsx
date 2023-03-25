@@ -1,9 +1,9 @@
 import {useState} from 'react';
-import type {GetStaticProps, NextPage} from 'next';
+import type {GetServerSideProps, NextPage} from 'next';
 import Head from 'next/head';
 import {StaticImageData} from 'next/image';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
-import {getCompanies, getIndustries} from '../../queryfns';
+import {getCompaniesByIndustry, getIndustries} from '../../queryfns';
 import {HeadingOne, IndustriesCard, Pagination} from '../../components';
 import {ogImage, url} from '../../utils/constants';
 
@@ -29,11 +29,11 @@ const Industries: NextPage = () => {
     queryFn: getIndustries,
   });
   const {data: companies} = useQuery({
-    queryKey: ['companies'],
-    queryFn: getCompanies,
+    queryKey: ['companiesByIndustry'],
+    queryFn: getCompaniesByIndustry,
   });
   const [currentPage, setCurrentPage] = useState(0);
-
+  console.log(industries, 'industries');
   const uniqueIndustries = industries?.data?.filter(
     (industry: Company, index: number) => {
       return (
@@ -79,6 +79,8 @@ const Industries: NextPage = () => {
     },
   );
 
+  console.log(uniqueCompanies, 'uniqueCompanies');
+
   const data = {
     data: uniqueCompanies,
     meta: {
@@ -110,7 +112,7 @@ const Industries: NextPage = () => {
         />
         <meta
           name="description"
-          content="Find your favorite sites in one place, then learn from the greats."
+          content="Seek inspiration for web design at Sitesnap! Explore our curated collection of innovative African websites, fueling creativity for designers & developers."
         />
         <link rel="icon" href="/favicon.ico" />
         {/* Open Graph / Facebook */}
@@ -120,7 +122,7 @@ const Industries: NextPage = () => {
         <meta
           name="description"
           property="og:description"
-          content="Find your favorite sites in one place, then learn from the greats."
+          content="Seek inspiration for web design at Sitesnap! Explore our curated collection of innovative African websites, fueling creativity for designers & developers."
         />
         <meta property="og:site_name" content="sitesnap.design" />
         <meta name="image" property="og:image" content={ogImage} />
@@ -131,7 +133,7 @@ const Industries: NextPage = () => {
         <meta property="twitter:title" content="industries - sitesnap.design" />
         <meta
           property="twitter:description"
-          content="Find your favorite sites in one place, then learn from the greats."
+          content="Seek inspiration for web design at Sitesnap! Explore our curated collection of innovative African websites, fueling creativity for designers & developers."
         />
         <meta property="twitter:image" content={ogImage} />
       </Head>
@@ -155,10 +157,10 @@ const Industries: NextPage = () => {
 
 export default Industries;
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const queryClient = new QueryClient();
   await Promise.all([
-    queryClient.prefetchQuery(['companies'], getCompanies),
+    queryClient.prefetchQuery(['companiesByIndustry'], getCompaniesByIndustry),
     queryClient.prefetchQuery(['industries'], getIndustries),
   ]);
 

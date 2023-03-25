@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import type {GetStaticProps, NextPage} from 'next';
+import type {GetServerSideProps, NextPage} from 'next';
 import Head from 'next/head';
 import {useRouter} from 'next/router';
 import {dehydrate, QueryClient, useQuery} from '@tanstack/react-query';
@@ -87,7 +87,7 @@ const Webpages: NextPage = () => {
         />
         <meta
           name="description"
-          content="Find your favorite sites in one place, then learn from the greats."
+          content="Seek inspiration for web design at Sitesnap! Explore our curated collection of innovative African websites, fueling creativity for designers & developers."
         />
         <link rel="icon" href="/favicon.ico" />
         {/* Open Graph / Facebook */}
@@ -97,7 +97,7 @@ const Webpages: NextPage = () => {
         <meta
           name="description"
           property="og:description"
-          content="Find your favorite sites in one place, then learn from the greats."
+          content="Seek inspiration for web design at Sitesnap! Explore our curated collection of innovative African websites, fueling creativity for designers & developers."
         />
         <meta property="og:site_name" content="sitesnap.design" />
         <meta name="image" property="og:image" content={ogImage} />
@@ -108,7 +108,7 @@ const Webpages: NextPage = () => {
         <meta property="twitter:title" content="webpages - sitesnap.design" />
         <meta
           property="twitter:description"
-          content="Find your favorite sites in one place, then learn from the greats."
+          content="Seek inspiration for web design at Sitesnap! Explore our curated collection of innovative African websites, fueling creativity for designers & developers."
         />
         <meta property="twitter:image" content={ogImage} />
       </Head>
@@ -131,7 +131,7 @@ const Webpages: NextPage = () => {
 
 export default Webpages;
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(['webpages'], getWebpages);
   return {
