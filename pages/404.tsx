@@ -11,7 +11,7 @@ export default function ErrorPage() {
           content="404 - sitesnap.design"
         />
         <meta name="description" content="Page not found." />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.png" />
       </Head>
 
       <div className="my-10">
