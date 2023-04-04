@@ -213,7 +213,7 @@ const IndividualWebpages: NextPage = () => {
           name="description"
           content="Seek inspiration for web design at Sitesnap! Explore our curated collection of innovative African websites, fueling creativity for designers & developers."
         />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.png" />
         <link
           rel="canonical"
           href={`${url}/webpages/${router.query.id}`}

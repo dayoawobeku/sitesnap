@@ -104,21 +104,26 @@ const Industries: NextPage = () => {
   return (
     <>
       <Head>
-        <title>industries - sitesnap.design</title>
+        <title>
+          Find your favorite sites in one place, then learn from the greats.
+        </title>
         <meta
           name="title"
           property="og:title"
-          content="industries - sitesnap.design"
+          content="Find your favorite sites in one place, then learn from the greats."
         />
         <meta
           name="description"
           content="Seek inspiration for web design at Sitesnap! Explore our curated collection of innovative African websites, fueling creativity for designers & developers."
         />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.png" />
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${url}/industries`} />
-        <meta property="og:title" content="industries - sitesnap.design" />
+        <meta
+          property="og:title"
+          content="Find your favorite sites in one place, then learn from the greats."
+        />
         <meta
           name="description"
           property="og:description"
@@ -130,7 +135,10 @@ const Industries: NextPage = () => {
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content={`${url}/industries`} />
         <meta property="twitter:site" content="@sitesnap" />
-        <meta property="twitter:title" content="industries - sitesnap.design" />
+        <meta
+          property="twitter:title"
+          content="Find your favorite sites in one place, then learn from the greats."
+        />
         <meta
           property="twitter:description"
           content="Seek inspiration for web design at Sitesnap! Explore our curated collection of innovative African websites, fueling creativity for designers & developers."
