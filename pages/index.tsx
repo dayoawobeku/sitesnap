@@ -30,8 +30,14 @@ const Homepage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>sitesnap.design</title>
-        <meta name="title" property="og:title" content="sitesnap.design" />
+        <title>
+          Find your favorite sites in one place, then learn from the greats.
+        </title>
+        <meta
+          name="title"
+          property="og:title"
+          content="Find your favorite sites in one place, then learn from the greats."
+        />
         <meta
           name="description"
           content="Seek inspiration for web design at Sitesnap! Explore our curated collection of innovative African websites, fueling creativity for designers & developers."
@@ -40,7 +46,10 @@ const Homepage: NextPage = () => {
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content={url} />
-        <meta property="og:title" content="sitesnap.design" />
+        <meta
+          property="og:title"
+          content="Find your favorite sites in one place, then learn from the greats."
+        />
         <meta
           name="description"
           property="og:description"
@@ -52,7 +61,10 @@ const Homepage: NextPage = () => {
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content={url} />
         <meta property="twitter:site" content="@sitesnap" />
-        <meta property="twitter:title" content="sitesnap.design" />
+        <meta
+          property="twitter:title"
+          content="Find your favorite sites in one place, then learn from the greats."
+        />
         <meta
           property="twitter:description"
           content="Seek inspiration for web design at Sitesnap! Explore our curated collection of innovative African websites, fueling creativity for designers & developers."
@@ -65,8 +77,9 @@ const Homepage: NextPage = () => {
           Find your favorite sites in one place, then learn from the greats.
         </h1>
         <p className="mx-auto mt-6 mb-2 max-w-[852px] px-[11px] text-base font-medium text-body sm:px-0 lg:text-md">
-          We track each of these sites and update our collection regularly to
-          include the latest designs.
+          Seek inspiration for web design at Sitesnap! Explore our curated
+          collection of innovative African websites, fueling creativity for
+          designers & developers.
         </p>
         <p className="text-base font-medium text-blue lg:text-md">
           *No account needed

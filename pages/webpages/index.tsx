@@ -79,11 +79,13 @@ const Webpages: NextPage = () => {
   return (
     <>
       <Head>
-        <title>webpages - sitesnap.design</title>
+        <title>
+          Find your favorite sites in one place, then learn from the greats.
+        </title>
         <meta
           name="title"
           property="og:title"
-          content="webpages - sitesnap.design"
+          content="Find your favorite sites in one place, then learn from the greats."
         />
         <meta
           name="description"
@@ -93,7 +95,10 @@ const Webpages: NextPage = () => {
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${url}/webpages`} />
-        <meta property="og:title" content="webpages - sitesnap.design" />
+        <meta
+          property="og:title"
+          content="Find your favorite sites in one place, then learn from the greats."
+        />
         <meta
           name="description"
           property="og:description"
@@ -105,7 +110,10 @@ const Webpages: NextPage = () => {
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content={`${url}/webpages`} />
         <meta property="twitter:site" content="@sitesnap" />
-        <meta property="twitter:title" content="webpages - sitesnap.design" />
+        <meta
+          property="twitter:title"
+          content="Find your favorite sites in one place, then learn from the greats."
+        />
         <meta
           property="twitter:description"
           content="Seek inspiration for web design at Sitesnap! Explore our curated collection of innovative African websites, fueling creativity for designers & developers."
